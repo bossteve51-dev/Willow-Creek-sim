@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Willow Creek – Immersive Town Simulator</title>
+  <style>
+    :root {
+      --green-dark: #2e7d32;
+      --green-main: #4CAF50;
+      --green-light: #81c784;
+      --green-pale: #e8f5e9;
+      --bg: #e6f3e6;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: #333;
+      margin: 0;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    header {
+      text-align: center;
+      background: linear-gradient(to bottom, var(--green-main), var(--green-dark));
+      color: white;
+      padding: 30px 20px;
+      border-radius: 12px;
+      margin-bottom: 25px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    }
+
+    h1 { margin: 0; font-size: 2.8em; text-shadow: 1px 1px 3px rgba(0,0,0,0.3); }
+
+    .container { display: flex; gap: 25px; max-width: 1300px; margin: 0 auto; }
+
+    #locations {
+      width: 300px;
+      flex-shrink: 0;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    #locations button {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 8px;
+      background: #f9fff9;
+      border: 1px solid var(--green-light);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s;
+    }
+
+    #locations button:hover {
+      background: var(--green-pale);
+      transform: translateX(4px);
+      box-shadow: 0 2px 8px rgba(76,175,80,0.2);
+    }
+
+    button.active-time {
+      background: var(--green-main) !important;
+      color: white !important;
+      font-weight: bold;
+      transform: scale(1.04) !important;
+    }
+
+    #locations h3 {
+      margin: 24px 0 12px;
+      color: var(--green-dark);
+      font-size: 1.4em;
+      border-bottom: 2px solid #a5d6a7;
+      padding-bottom: 6px;
+    }
+
+    .accordion-item {
+      margin-bottom: 8px;
+      border: 1px solid var(--green-light);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #f9fff9;
+    }
+
+    .accordion-header {
+      width: 100%;
+      padding: 14px 18px;
+      background: var(--green-pale);
+      border: none;
+      text-align: left;
+      font-size: 1.1em;
+      font-weight: 600;
+      color: #1b5e20;
+      cursor: pointer;
+      transition: background 0.2s;
+      position: relative;
+    }
+
+    .accordion-header:hover { background: #dcedc8; }
+
+    .location-count {
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.85em;
+      opacity: 0.75;
+      background: rgba(255,255,255,0.7);
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease-out;
+      background: white;
+    }
+
+    .accordion-item.active .accordion-content { max-height: 1600px; }
+
+    #main-content {
+      flex: 1;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      min-height: 700px;
+    }
+
+    #location-desc {
+      background: #f9fff9;
+      border-left: 5px solid var(--green-main);
+      padding: 18px 22px;
+      margin: 20px 0 30px;
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: #424242;
+      line-height: 1.7;
+      font-size: 1.05em;
+    }
+
+    #npc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 18px;
+    }
+
+    .npc-card {
+      background: linear-gradient(to bottom, #ffffff, #f9fff9);
+      border: 2px solid var(--green-light);
+      border-radius: 10px;
+      padding: 18px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+    }
+
+    .npc-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 25px rgba(76,175,80,0.25);
+      border-color: var(--green-main);
+    }
+
+    .outfit { font-style: italic; color: #5d4037; margin: 8px 0; font-size: 0.95em; }
+
+    #npc-detail {
+      display: none;
+      position: fixed;
+      inset: 50% auto auto 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.35);
+      max-width: 640px;
+      width: 92%;
+      z-index: 1000;
+      max-height: 88vh;
+      overflow-y: auto;
+      border: 1px solid #a5d6a7;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 18px; right: 25px;
+      background: #ef5350;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1.1em;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .close-btn:hover { background: #d32f2f; }
+
+    .time-display {
+      font-size: 1.25em;
+      font-weight: bold;
+      color: white;
+      margin: 12px 0;
+      background: rgba(0,0,0,0.15);
+      padding: 6px 14px;
+      border-radius: 20px;
+      display: inline-block;
+    }
+
+    .personality { font-style: italic; color: #388e3c; margin: 10px 0; font-weight: 500; }
+    .minor-note { font-style: italic; color: #757575; margin: 14px 0; padding: 10px; background: #fafafa; border-radius: 6px; }
+    .clothing-section { margin-top: 20px; padding-top: 16px; border-top: 1px dashed #a5d6a7; }
+    .clothing-item { margin: 6px 0; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🌳 Willow Creek</h1>
+  </p> class="population">A quiet Southern town of 100 souls nestled among rolling hills</p>
+  <div id="time-display" class="time-display"></div>
+</header>
+
+<div class="container">
+  <aside id="locations">
+    <h2>Explore Willow Creek</h2>
+    <button data-action="all-residents">📜 View All Residents</button>
+
+    <h3>Time of Day</h3>
+    <div id="time-buttons"></div>
+
+    <h3>Places to Visit</h3>
+    <div id="location-accordion"></div>
+  </aside>
+
+  <main id="main-content">
+    <h2 id="location-title">Welcome to Willow Creek</h2>
+    <div id="location-desc">A sleepy Southern town where oak-lined streets meet friendly faces, Friday night football echoes in autumn, and everyone knows your order at the Willow Cafe. Select a place to step inside...</div>
+    <div id="npc-grid"></div>
+  </main>
+</div>
+
+<div id="npc-detail">
+  <button class="close-btn">✕ Close</button>
+  <div id="detail-content"></div>
+</div>
+
+<script>
+(function() {
+  // ───────────────────────────────────────────────
+  // CONFIG & CONSTANTS
+  // ───────────────────────────────────────────────
+
+  const CONFIG = {
+    TOTAL_POPULATION: 100,
+    NIGHT_HOME_PROB: 0.80,
+    EARLY_MORNING_HOME_PROB: 0.75,
+    CHILD_SCHOOL_PROB: 0.85,
+    LATE_AFTERNOON_PLAY_PROB: 0.60,
+    LATE_EVENING_SLEEP_PROB: 0.65,
+  };
+
+  const TIME_BLOCKS = {
+    EarlyMorning:   { label: "Early Morning (6–9)",   emoji: "🌄" },
+    Morning:        { label: "Morning (9–12)",        emoji: "☀️" },
+    Lunch:          { label: "Lunch (12–1)",          emoji: "🍽️" },
+    Afternoon:      { label: "Afternoon (1–5)",       emoji: "🌤️" },
+    LateAfternoon:  { label: "Late Afternoon (5–7)",  emoji: "🌅" },
+    Evening:        { label: "Evening (7–10)",        emoji: "🌆" },
+    LateEvening:    { label: "Late Evening (10–12)",  emoji: "🌃" },
+    Night:          { label: "Night (12–6)",          emoji: "🌙" },
+  };
+
+  const NAMES = {
+    male:   ["John","Michael","David","James","William","Robert","Thomas","Charles","Joseph","Richard","Christopher","Daniel","Matthew","Anthony","Mark","Paul","Steven","Andrew","Kenneth","George","Henry","Edward","Benjamin","Samuel","Joshua","Ethan","Ryan","Jacob","Nathan","Jonathan","Brandon","Tyler","Christian","Dylan","Logan","Noah","Caleb","Hunter","Jack","Luke","Gabriel","Owen","Connor","Isaiah","Sebastian","Carter","Julian","Levi","Aaron","Eli","Landon","Jordan","Jeremiah","Angel","Josiah","Gavin","Aiden","Elijah","Brayden"],
+    female: ["Mary","Jennifer","Patricia","Linda","Elizabeth","Barbara","Susan","Jessica","Sarah","Karen","Lisa","Nancy","Betty","Helen","Sandra","Donna","Carol","Ruth","Sharon","Margaret","Emily","Olivia","Sophia","Emma","Ava","Isabella","Mia","Abigail","Charlotte","Harper","Evelyn","Amelia","Ella","Scarlett","Grace","Chloe","Victoria","Riley","Aria","Lily","Hannah","Lillian","Addison","Eleanor","Natalie","Layla","Brooklyn","Zoey","Penelope","Lucy","Audrey","Claire","Skylar","Violet","Sadie","Stella","Paisley","Savannah","Maya","Leah","Aaliyah","Anna","Allison","Nora","Alyssa"]
+  };
+
+  const LAST_NAMES = ["Smith","Johnson","Williams","Jones","Brown","Davis","Miller","Wilson","Moore","Taylor","Anderson","Thomas","Jackson","Harris","Martin","Thompson","Garcia","Martinez","Robinson","Clark","Rodriguez","Lewis","Walker","Hall","Young","Allen","King","Wright","Scott","Torres","Nguyen","Hill","Flores","Green","Adams","Nelson","Baker","Rivera","Campbell","Mitchell","Carter","Roberts"];
+
+  const PERSONALITY_TRAITS = ["Kind","Grumpy","Optimistic","Pessimistic","Shy","Outgoing","Ambitious","Laid-back","Intelligent","Creative","Stubborn","Flexible","Generous","Selfish","Loyal","Independent","Adventurous","Cautious","Humorous","Serious","Patient","Impatient","Energetic","Calm","Curious","Reserved","Honest","Sarcastic","Empathetic","Competitive"];
+
+  const STYLES = ["Preppy", "Emo", "Nerdy", "Jock", "Conservative", "Revealing", "Bohemian", "Casual"];
+
+  const APPEARANCE = {
+    skinColors: ["fair", "light", "medium", "olive", "tan", "dark", "ebony"],
+    hairColors: ["blonde", "light brown", "brown", "dark brown", "black", "red", "auburn", "gray", "silver"],
+    hairLengths: ["short", "medium", "long", "very long"],
+    eyeShapes: ["almond", "round", "hooded", "wide-set", "close-set", "upturned"],
+    eyeColors: ["blue", "green", "brown", "hazel", "gray", "amber"],
+    facialFeatures: ["freckles", "dimples", "glasses", "high cheekbones", "full lips", "prominent nose", "strong jaw"],
+    bodyShapes: ["slim", "average", "athletic", "curvy", "muscular", "plump", "stocky"],
+  };
+
+  const FEMALE_SPECIFIC = {
+    hips: ["narrow", "average", "wide", "childbearing"],
+    butt: ["small", "average", "large", "rounded", "heart-shaped", "bubble"],
+    breastSize: ["A cup (small)", "B cup (average)", "C cup (full)", "D cup (large)", "DD cup (very large)"],
+    breastShape: ["perky", "round", "teardrop", "full and heavy", "pendulous"],
+  };
+
+  const MALE_SPECIFIC = {
+    penisSize: ["micro (.5-1 inches)", "tiny (2-3 inches)", "small (4-5 inches)", "average (5-6 inches)", "above average (6-7 inches)", "large (7-8 inches)", "very large (8+ inches)"],
+  };
+
+  const CLOTHING = {
+    male: {
+      Preppy: {
+        infant: { top: ["onesie"], bottom: ["diaper cover"], shoes: ["none"], hat: ["none"], underwear: ["diaper"] },
+        kid:    { top: ["polo shirt"], bottom: ["khaki shorts"], shoes: ["sneakers"], hat: ["baseball cap"], underwear: ["briefs"] },
+        teen:   { top: ["polo shirt", "oxford shirt"], bottom: ["chinos"], shoes: ["loafers"], hat: ["none"], underwear: ["boxer-briefs"] },
+        adult:  { top: ["polo shirt", "oxford button-down"], bottom: ["khaki chinos", "navy slacks"], shoes: ["penny loafers"], hat: ["none"], underwear: ["boxers"] },
+        senior: { top: ["sweater vest over shirt"], bottom: ["wool trousers"], shoes: ["leather shoes"], hat: ["fedora"], underwear: ["boxers"] }
+      },
+      Emo: {
+        infant: { top: ["baby black tee"], bottom: ["soft pants"], shoes: ["none"], underwear: ["diaper"] },
+        kid:    { top: ["graphic tee"], bottom: ["black shorts"], shoes: ["converse"], underwear: ["briefs"] },
+        teen:   { top: ["band hoodie", "long-sleeve tee"], bottom: ["skinny black jeans"], shoes: ["converse"], hat: ["beanie"], underwear: ["black briefs"] },
+        adult:  { top: ["band t-shirt", "hoodie"], bottom: ["black jeans"], shoes: ["doc martens"], underwear: ["black boxer-briefs"] },
+        senior: { top: ["dark sweater"], bottom: ["dark slacks"], shoes: ["comfort shoes"], underwear: ["boxers"] }
+      },
+      Nerdy: {
+        infant: { top: ["cute printed onesie"], bottom: ["diaper cover"], shoes: ["none"], underwear: ["diaper"] },
+        kid:    { top: ["button-up with cartoon"], bottom: ["corduroy pants"], shoes: ["sneakers"], underwear: ["briefs"] },
+        teen:   { top: ["graphic tee under cardigan"], bottom: ["khakis"], shoes: ["canvas sneakers"], underwear: ["boxer-briefs"] },
+        adult:  { top: ["button-up with sweater vest"], bottom: ["corduroy pants"], shoes: ["oxford shoes"], underwear: ["boxers"] },
+        senior: { top: ["cardigan over shirt"], bottom: ["comfort pants"], shoes: ["loafers"], underwear: ["boxers"] }
+      },
+      Jock: {
+        infant: { top: ["tiny sports onesie"], bottom: ["diaper"], shoes: ["none"], underwear: ["diaper"] },
+        kid:    { top: ["team t-shirt"], bottom: ["athletic shorts"], shoes: ["sneakers"], underwear: ["briefs"] },
+        teen:   { top: ["athletic jersey", "tank top"], bottom: ["gym shorts"], shoes: ["basketball shoes"], underwear: ["athletic boxer-briefs"] },
+        adult:  { top: ["team polo", "compression shirt"], bottom: ["athletic shorts"], shoes: ["running sneakers"], underwear: ["sport trunks"] },
+        senior: { top: ["light jacket over tee"], bottom: ["track pants"], shoes: ["walking shoes"], underwear: ["boxers"] }
+      },
+      Conservative: {
+        infant: { top: ["classic onesie"], bottom: ["diaper cover"], shoes: ["none"], underwear: ["diaper"] },
+        kid:    { top: ["button-up shirt"], bottom: ["khakis"], shoes: ["loafers"], underwear: ["briefs"] },
+        teen:   { top: ["dress shirt"], bottom: ["slacks"], shoes: ["dress shoes"], underwear: ["boxer-briefs"] },
+        adult:  { top: ["long-sleeve button-up"], bottom: ["dress slacks"], shoes: ["brogues"], underwear: ["boxers"] },
+        senior: { top: ["sweater over collared shirt"], bottom: ["wool trousers"], shoes: ["leather shoes"], underwear: ["boxers"] }
+      },
+      Revealing: {
+        infant: { top: ["light onesie"], bottom: ["diaper"], shoes: ["none"], underwear: ["diaper"] },
+        kid:    { top: ["tank top"], bottom: ["shorts"], shoes: ["sandals"], underwear: ["briefs"] },
+        teen:   { top: ["muscle tank"], bottom: ["gym shorts"], shoes: ["flip-flops"], underwear: ["briefs"] },
+        adult:  { top: ["fitted t-shirt", "open button-up"], bottom: ["cargo shorts"], shoes: ["sandals"], underwear: ["tight boxer-briefs"] },
+        senior: { top: ["light polo"], bottom: ["comfort shorts"], shoes: ["sandals"], underwear: ["boxers"] }
+      },
+      Bohemian: {
+        infant: { top: ["soft patterned onesie"], bottom: ["diaper cover"], shoes: ["none"], underwear: ["diaper"] },
+        kid:    { top: ["loose tunic"], bottom: ["soft pants"], shoes: ["sandals"], underwear: ["briefs"] },
+        teen:   { top: ["flowy shirt"], bottom: ["loose trousers"], shoes: ["sandals"], underwear: ["boxer-briefs"] },
+        adult:  { top: ["linen shirt"], bottom: ["wide-leg pants"], shoes: ["leather sandals"], underwear: ["loose boxers"] },
+        senior: { top: ["comfortable tunic"], bottom: ["elastic pants"], shoes: ["espadrilles"], underwear: ["boxers"] }
+      },
+      Casual: {
+        infant: { top: ["baby tee"], bottom: ["diaper"], shoes: ["none"], underwear: ["diaper"] },
+        kid:    { top: ["t-shirt"], bottom: ["shorts"], shoes: ["sneakers"], underwear: ["briefs"] },
+        teen:   { top: ["hoodie", "t-shirt"], bottom: ["jeans"], shoes: ["sneakers"], underwear: ["boxer-briefs"] },
+        adult:  { top: ["t-shirt", "flannel"], bottom: ["jeans"], shoes: ["sneakers"], underwear: ["boxers"] },
+        senior: { top: ["comfort sweater"], bottom: ["elastic pants"], shoes: ["slippers"], underwear: ["boxers"] }
+      },
+      Pajamas: {
+        infant: { top: ["footie pajamas"], bottom: ["built-in"], shoes: ["none"], hat: ["none"], underwear: ["diaper"] },
+        kid:    { top: ["pajama top with print"], bottom: ["pajama pants"], shoes: ["none"], hat: ["none"], underwear: ["none"] },
+        teen:   { top: ["graphic pajama shirt"], bottom: ["pajama pants"], shoes: ["none"], hat: ["none"], underwear: ["none"] },
+        adult:  { top: ["pajama shirt"], bottom: ["pajama pants"], shoes: ["none"], hat: ["none"], underwear: ["none"] },
+        senior: { top: ["long-sleeve pajama top"], bottom: ["pajama pants"], shoes: ["slippers"], hat: ["none"], underwear: ["none"] }
+      }
+    },
+    female: {
+      Preppy: {
+        infant: { top: ["baby dress", "onesie"], bottom: ["diaper cover"], shoes: ["none"], hat: ["none"], underwear: ["diaper"] },
+        kid:    { top: ["polo shirt"], bottom: ["skort"], shoes: ["sneakers"], hat: ["headband"], underwear: ["panties"] },
+        teen:   { top: ["blouse"], bottom: ["pleated skirt"], shoes: ["loafers"], hat: ["none"], underwear: ["panties"], bra: ["training bra"] },
+        adult:  { top: ["blouse", "cardigan"], bottom: ["A-line skirt"], shoes: ["ballet flats"], underwear: ["hipster panties"], bra: ["standard bra"] },
+        senior: { top: ["cardigan over blouse"], bottom: ["long skirt"], shoes: ["low heels"], underwear: ["full-coverage panties"], bra: ["full coverage bra"] }
+      },
+      Casual: {
+        infant: { top: ["baby dress"], bottom: ["diaper"], shoes: ["none"], hat: ["none"], underwear: ["diaper"] },
+        kid:    { top: ["t-shirt"], bottom: ["leggings"], shoes: ["sneakers"], underwear: ["panties"] },
+        teen:   { top: ["tank top", "hoodie"], bottom: ["jeans"], shoes: ["sneakers"], underwear: ["panties"], bra: ["sports bra"] },
+        adult:  { top: ["t-shirt", "blouse"], bottom: ["jeans"], shoes: ["sneakers"], underwear: ["cotton panties"], bra: ["standard bra"] },
+        senior: { top: ["comfort sweater"], bottom: ["elastic pants"], shoes: ["slippers"], underwear: ["cotton briefs"], bra: ["comfort bra"] }
+      },
+      Emo: {
+        infant: { top: ["baby black tee"], bottom: ["soft pants"], shoes: ["none"], underwear: ["diaper"] },
+        kid:    { top: ["graphic tee"], bottom: ["black shorts"], shoes: ["converse"], underwear: ["panties"] },
+        teen:   { top: ["band hoodie", "long-sleeve tee"], bottom: ["skinny black jeans"], shoes: ["converse"], hat: ["beanie"], underwear: ["black panties"], bra: ["black bra"] },
+        adult:  { top: ["band t-shirt", "hoodie"], bottom: ["black jeans"], shoes: ["doc martens"], underwear: ["black panties"], bra: ["black bra"] },
+        senior: { top: ["dark sweater"], bottom: ["dark slacks"], shoes: ["comfort shoes"], underwear: ["black panties"], bra: ["black bra"] }
+      },
+      Nerdy: {
+        infant: { top: ["cute printed onesie"], bottom: ["diaper cover"], shoes: ["none"], underwear: ["diaper"] },
+        kid:    { top: ["button-up with cartoon"], bottom: ["corduroy pants"], shoes: ["sneakers"], underwear: ["panties"] },
+        teen:   { top: ["graphic tee under cardigan"], bottom: ["khakis"], shoes: ["canvas sneakers"], underwear: ["panties"], bra: ["standard bra"] },
+        adult:  { top: ["button-up with sweater vest"], bottom: ["corduroy pants"], shoes: ["oxford shoes"], underwear: ["cotton panties"], bra: ["standard bra"] },
+        senior: { top: ["cardigan over shirt"], bottom: ["comfort pants"], shoes: ["loafers"], underwear: ["cotton panties"], bra: ["standard bra"] }
+      },
+      Jock: {
+        infant: { top: ["tiny sports onesie"], bottom: ["diaper"], shoes: ["none"], underwear: ["diaper"] },
+        kid:    { top: ["team t-shirt"], bottom: ["athletic shorts"], shoes: ["sneakers"], underwear: ["panties"] },
+        teen:   { top: ["athletic jersey", "tank top"], bottom: ["gym shorts"], shoes: ["basketball shoes"], underwear: ["panties"], bra: ["sports bra"] },
+        adult:  { top: ["team polo", "compression shirt"], bottom: ["athletic shorts"], shoes: ["running sneakers"], underwear: ["panties"], bra: ["sports bra"] },
+        senior: { top: ["light jacket over tee"], bottom: ["track pants"], shoes: ["walking shoes"], underwear: ["panties"], bra: ["sports bra"] }
+      },
+      Conservative: {
+        infant: { top: ["classic onesie"], bottom: ["diaper cover"], shoes: ["none"], underwear: ["diaper"] },
+        kid:    { top: ["button-up shirt"], bottom: ["khakis"], shoes: ["loafers"], underwear: ["panties"] },
+        teen:   { top: ["dress shirt"], bottom: ["slacks"], shoes: ["dress shoes"], underwear: ["panties"], bra: ["standard bra"] },
+        adult:  { top: ["long-sleeve button-up"], bottom: ["dress slacks"], shoes: ["brogues"], underwear: ["cotton panties"], bra: ["standard bra"] },
+        senior: { top: ["sweater over collared shirt"], bottom: ["wool trousers"], shoes: ["leather shoes"], underwear: ["cotton panties"], bra: ["standard bra"] }
+      },
+      Revealing: {
+        infant: { top: ["light onesie"], bottom: ["diaper"], shoes: ["none"], underwear: ["diaper"] },
+        kid:    { top: ["tank top"], bottom: ["shorts"], shoes: ["sandals"], underwear: ["panties"] },
+        teen:   { top: ["muscle tank"], bottom: ["gym shorts"], shoes: ["flip-flops"], underwear: ["panties"], bra: ["none"] },
+        adult:  { top: ["fitted t-shirt", "open button-up"], bottom: ["cargo shorts"], shoes: ["sandals"], underwear: ["panties"], bra: ["none"] },
+        senior: { top: ["light polo"], bottom: ["comfort shorts"], shoes: ["sandals"], underwear: ["panties"], bra: ["none"] }
+      },
+      Bohemian: {
+        infant: { top: ["soft patterned onesie"], bottom: ["diaper cover"], shoes: ["none"], underwear: ["diaper"] },
+        kid:    { top: ["loose tunic"], bottom: ["soft pants"], shoes: ["sandals"], underwear: ["panties"] },
+        teen:   { top: ["flowy shirt"], bottom: ["loose trousers"], shoes: ["sandals"], underwear: ["panties"], bra: ["none"] },
+        adult:  { top: ["linen shirt"], bottom: ["wide-leg pants"], shoes: ["leather sandals"], underwear: ["panties"], bra: ["none"] },
+        senior: { top: ["comfortable tunic"], bottom: ["elastic pants"], shoes: ["espadrilles"], underwear: ["panties"], bra: ["none"] }
+      },
+      Pajamas: {
+        infant: { top: ["footie pajamas"], bottom: ["built-in"], shoes: ["none"], hat: ["none"], underwear: ["diaper"] },
+        kid:    { top: ["pajama top with pattern"], bottom: ["pajama shorts"], shoes: ["none"], hat: ["none"], underwear: ["panties"] },
+        teen:   { top: ["cute pajama set"], bottom: ["pajama pants"], shoes: ["none"], hat: ["none"], underwear: ["panties"], bra: ["none"] },
+        adult:  { top: ["pajama top"], bottom: ["pajama shorts"], shoes: ["none"], hat: ["none"], underwear: ["panties"], bra: ["none"] },
+        senior: { top: ["long nightgown"], bottom: ["none"], shoes: ["slippers"], hat: ["none"], underwear: ["panties"], bra: ["none"] }
+      }
+    }
+  };
+
+  const DEFAULT_CLOTHING = {
+    male:   { top: "t-shirt", bottom: "shorts", shoes: "none", hat: "none", underwear: "none" },
+    female: { top: "t-shirt", bottom: "shorts", shoes: "none", hat: "none", underwear: "panties" }
+  };
+
+  const AREA_SUBAREAS = {
+    "Residential Area": ["Home 1","Home 2","Home 3","Home 4","Home 5","Home 6","Home 7","Home 8","Home 9","Home 10","Home 11","Home 12","Home 13","Home 14","Home 15","Home 16","Home 17","Home 18","Home 19","Home 20"],
+    "Main Street": ["Willow Cafe","Grocery Mart","Hardware Store","Barber Shop / Salon","Bookstore","Pharmacy","Clothing Boutique","Bakery","Post Office","Bank"],
+    "Central Park": ["Picnic Area","Playground","Walking Trails","Pond Bench Area"],
+    "Town Hall": ["Mayor Office","Council Room","Community Hall","Records Office"],
+    "Local Clinic": ["Waiting Room","Exam Room 1","Exam Room 2","Pharmacy Counter"],
+    "Library": ["Adult Fiction","Children's Section","Reading Nook","Computer Lab"],
+    "Schoolyard / Elementary School": ["Playground","Classroom Wing","Cafeteria","Gym"]
+  };
+
+  const AREA_DESCRIPTIONS = {
+    "Home 1": "A cozy two-story Craftsman with a wide front porch swing creaking gently in the breeze...",
+    "Home 2": "Neat Victorian cottage painted soft sage green. Lace curtains flutter at the windows...",
+    "Home 5": "Modern ranch-style house with open-plan living. Sunlight pours through large windows...",
+    "Home 10": "Quiet bungalow shaded by a massive live oak. Inside you'll find bookshelves overflowing...",
+    "Home 15": "Brick colonial with a wraparound porch strung with fairy lights...",
+    "Willow Cafe": "The heart of downtown — mismatched wooden tables, vintage tin signs...",
+    "Grocery Mart": "Bright, family-run store with wooden shelves stocked high...",
+    "Hardware Store": "Cluttered treasure trove of tools, paint cans, and odd gadgets...",
+    "Barber Shop / Salon": "Classic red-and-white pole outside. Inside: leather chairs...",
+    "Bookstore": "Cozy nook smelling of old paper and ink...",
+    "Picnic Area": "Shady spot under ancient oaks with weathered wooden tables...",
+    "Playground": "Bright swings, slides, and a wooden fort under a sprawling magnolia...",
+    "Classroom Wing": "Sunlit halls smelling of chalk and crayons...",
+    "Outdoor Patio": "String lights drape above wrought-iron tables at the Willow Cafe...",
+    "Reading Nook": "Quiet corner of the library with overstuffed chairs...",
+    "Pond Bench Area": "Wooden benches circle a small pond where ducks glide..."
+  };
+
+  // ───────────────────────────────────────────────
+  // STATE
+  // ───────────────────────────────────────────────
+
+  const state = {
+    npcs: [],
+    currentTimeBlock: "Morning",
+  };
+
+  // ───────────────────────────────────────────────
+  // DOM CACHE
+  // ───────────────────────────────────────────────
+
+  const dom = {
+    timeDisplay: document.getElementById("time-display"),
+    locationTitle: document.getElementById("location-title"),
+    locationDesc: document.getElementById("location-desc"),
+    npcGrid: document.getElementById("npc-grid"),
+    locationAccordion: document.getElementById("location-accordion"),
+    timeButtons: document.getElementById("time-buttons"),
+    npcDetail: document.getElementById("npc-detail"),
+    detailContent: document.getElementById("detail-content"),
+  };
+
+  // ───────────────────────────────────────────────
+  // HELPERS
+  // ───────────────────────────────────────────────
+
+  function randomFrom(arr) {
+    if (!Array.isArray(arr) || arr.length === 0) return "none";
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  function getAgeGroup(age) {
+    if (age < 5)  return "infant";
+    if (age < 13) return "kid";
+    if (age < 18) return "teen";
+    if (age < 60) return "adult";
+    return "senior";
+  }
+
+  function pickTwoTraits() {
+    const traits = [...PERSONALITY_TRAITS];
+    const i1 = Math.floor(Math.random() * traits.length);
+    const t1 = traits.splice(i1, 1)[0];
+    const i2 = Math.floor(Math.random() * traits.length);
+    const t2 = traits.splice(i2, 1)[0];
+    return [t1, t2];
+  }
+
+  function inherit(p1, p2, opts) {
+    if (p1 && p2 && Math.random() < 0.8) return Math.random() < 0.5 ? p1 : p2;
+    if (p1 && Math.random() < 0.7) return p1;
+    return randomFrom(opts);
+  }
+
+  // ───────────────────────────────────────────────
+  // NPC GENERATION
+  // ───────────────────────────────────────────────
+
+  function createBaseNPC(id, sex, age, lastName, parent1 = null, parent2 = null) {
+    const skinColor   = inherit(parent1?.skinColor, parent2?.skinColor, APPEARANCE.skinColors);
+    let hairColor   = inherit(parent1?.hairColor, parent2?.hairColor, APPEARANCE.hairColors);
+    const eyeColor    = inherit(parent1?.eyeColor,  parent2?.eyeColor,  APPEARANCE.eyeColors);
+    const bodyShape   = inherit(parent1?.bodyShape, parent2?.bodyShape, APPEARANCE.bodyShapes);
+    const facialFeature = inherit(parent1?.facialFeature, parent2?.facialFeature, APPEARANCE.facialFeatures);
+
+    let hairLength = randomFrom(APPEARANCE.hairLengths);
+    if (sex === "male" && age >= 30 && Math.random() < 0.22) {
+      hairLength = "bald";
+      hairColor = "N/A";
+    }
+
+    const npc = {
+      id,
+      name: randomFrom(sex === "male" ? NAMES.male : NAMES.female) + " " + lastName,
+      age,
+      sex,
+      skinColor,
+      hairLength,
+      hairColor,
+      eyeShape: randomFrom(APPEARANCE.eyeShapes),
+      eyeColor,
+      facialFeature,
+      bodyShape,
+      occupation: getOccupation(age),
+      trait1: null,
+      trait2: null,
+      style: randomFrom(STYLES),
+      familyRole: null,
+      spouseName: null,
+      childrenNames: null,
+      parentNames: null,
+      home: null,
+      routineAnchor: null,
+      currentLocation: null,
+    };
+
+    [npc.trait1, npc.trait2] = pickTwoTraits();
+
+    if (age >= 13) {
+      if (sex === "female") {
+        npc.hips = randomFrom(FEMALE_SPECIFIC.hips);
+        npc.butt = randomFrom(FEMALE_SPECIFIC.butt);
+        npc.breastSize = randomFrom(FEMALE_SPECIFIC.breastSize);
+        npc.breastShape = randomFrom(FEMALE_SPECIFIC.breastShape);
+      } else {
+        npc.penisSize = randomFrom(MALE_SPECIFIC.penisSize);
+      }
+    }
+
+    return npc;
+  }
+
+  function getOccupation(age) {
+    const group = getAgeGroup(age);
+    if (group === "infant") return "Infant/Toddler";
+    if (group === "kid")    return "Kid";
+    if (group === "teen")   return "Teen / High School Student";
+    if (group === "adult")  return randomFrom(["Teacher","Doctor","Nurse","Mechanic","Chef","Police Officer","Accountant","Construction Worker","Artist","Writer","Musician","Bank Teller","Shopkeeper","Barista"]);
+    return randomFrom(["Retiree","Part-time Consultant","Librarian","Shopkeeper","Gardener"]);
+  }
+
+  function generateTown() {
+    const npcs = [];
+    let id = 0;
+    let homeCounter = 1;
+    const assignedHomes = new Map();
+
+    // 15 married couples + children
+    for (let i = 0; i < 15; i++) {
+      const ln = randomFrom(LAST_NAMES);
+      let home = assignedHomes.get(ln) || `Home ${homeCounter++}`;
+      assignedHomes.set(ln, home);
+
+      const hAge = 29 + Math.floor(Math.random() * 14);
+      const wAge = hAge - (2 + Math.floor(Math.random() * 5));
+
+      const husband = createBaseNPC(id++, "male", hAge, ln);
+      const wife = createBaseNPC(id++, "female", wAge, ln, husband, null);
+
+      husband.familyRole = "husband/father";
+      wife.familyRole = "wife/mother";
+      husband.spouseName = wife.name;
+      wife.spouseName = husband.name;
+      husband.childrenNames = [];
+      wife.childrenNames = [];
+      husband.home = wife.home = home;
+
+      const numKids = 2 + Math.floor(Math.random() * 4);
+      const maxKidAge = Math.min(25, hAge - 16);
+
+      for (let k = 0; k < numKids; k++) {
+        const cAge = Math.floor(Math.random() * (maxKidAge + 1));
+        const cSex = Math.random() < 0.5 ? "male" : "female";
+        const child = createBaseNPC(id++, cSex, cAge, ln, husband, wife);
+        child.familyRole = cAge >= 18 ? "adult child" : "child";
+        child.parentNames = [husband.name, wife.name];
+        child.home = home;
+        husband.childrenNames.push(child.name);
+        wife.childrenNames.push(child.name);
+        npcs.push(child);
+      }
+      npcs.push(husband, wife);
+    }
+
+    // 8 single parents + children
+    for (let i = 0; i < 8; i++) {
+      const ln = randomFrom(LAST_NAMES);
+      let home = assignedHomes.get(ln) || `Home ${homeCounter++}`;
+      assignedHomes.set(ln, home);
+
+      const pAge = 34 + Math.floor(Math.random() * 16);
+      const pSex = Math.random() < 0.5 ? "male" : "female";
+      const parent = createBaseNPC(id++, pSex, pAge, ln);
+      parent.familyRole = pSex === "male" ? "single father" : "single mother";
+      parent.home = home;
+      parent.childrenNames = [];
+
+      const numKids = 1 + Math.floor(Math.random() * 3);
+      const maxKidAge = Math.min(22, pAge - 15);
+
+      for (let k = 0; k < numKids; k++) {
+        const cAge = Math.floor(Math.random() * (maxKidAge + 1));
+        const cSex = Math.random() < 0.5 ? "male" : "female";
+        const child = createBaseNPC(id++, cSex, cAge, ln, parent, null);
+        child.familyRole = cAge >= 18 ? "adult child" : "child";
+        child.parentNames = [parent.name];
+        child.home = home;
+        parent.childrenNames.push(child.name);
+        npcs.push(child);
+      }
+      npcs.push(parent);
+    }
+
+    // Fill remaining spots with singles
+    while (npcs.length < CONFIG.TOTAL_POPULATION) {
+      const age = 24 + Math.floor(Math.random() * 32);
+      const sex = Math.random() < 0.5 ? "male" : "female";
+      const ln = randomFrom(LAST_NAMES);
+      const person = createBaseNPC(id++, sex, age, ln);
+      person.familyRole = "single";
+
+      let home = assignedHomes.get(ln);
+      if (!home && homeCounter <= 20) {
+        home = `Home ${homeCounter++}`;
+        assignedHomes.set(ln, home);
+      } else if (!home) {
+        home = `Home ${Math.floor(Math.random() * (homeCounter - 1)) + 1}`;
+      }
+      person.home = home;
+      npcs.push(person);
+    }
+
+    if (npcs.length > CONFIG.TOTAL_POPULATION) npcs.length = CONFIG.TOTAL_POPULATION;
+
+    npcs.forEach(npc => {
+      npc.routineAnchor = getRoutineAnchor(npc);
+    });
+
+    return npcs;
+  }
+
+  function getRoutineAnchor(npc) {
+    if (npc.age < 18) return "Schoolyard / Elementary School";
+    if (npc.occupation.includes("Teacher") || npc.occupation.includes("Student")) return "Schoolyard / Elementary School";
+    if (npc.occupation.includes("Doctor") || npc.occupation.includes("Nurse")) return "Local Clinic";
+    if (npc.occupation.match(/Barista|Wait|Cafe|Chef/)) return "Willow Cafe";
+    if (npc.occupation.includes("Librar")) return "Library";
+    if (npc.occupation.match(/Shopkeeper|Retail/)) return "Main Street";
+    if (npc.trait1 === "Outgoing" || npc.trait2 === "Outgoing") return "Willow Cafe";
+    if (npc.trait1 === "Reserved" || npc.trait2 === "Reserved") return "Library";
+    return "Residential Area";
+  }
+
+  function determineLocation(npc, timeBlock) {
+    const { age, occupation: occ, routineAnchor: anchor, home } = npc;
+
+    if (timeBlock === "Night" || (timeBlock === "LateEvening" && Math.random() < CONFIG.NIGHT_HOME_PROB)) return home;
+    if (timeBlock === "EarlyMorning" && Math.random() < CONFIG.EARLY_MORNING_HOME_PROB) return home;
+
+    if (age < 13) {
+      if (["Morning", "Lunch", "Afternoon"].includes(timeBlock)) {
+        return Math.random() < CONFIG.CHILD_SCHOOL_PROB ? "Classroom Wing" : "Playground";
+      }
+      if (timeBlock === "LateAfternoon") {
+        return Math.random() < CONFIG.LATE_AFTERNOON_PLAY_PROB ? "Playground" : home;
+      }
+      return home;
+    }
+
+    if (age < 18) {
+      if (["Morning", "Lunch", "Afternoon"].includes(timeBlock)) return "Classroom Wing";
+      if (timeBlock === "LateAfternoon") return randomFrom(["Playground", "Central Park", "Outdoor Patio", home]);
+      return home;
+    }
+
+    let candidates = [];
+
+    if (["Morning","Lunch","Afternoon"].includes(timeBlock) && !occ.includes("Retiree") && !occ.includes("Infant")) {
+      candidates.push(anchor);
+      if (Math.random() < 0.30) candidates.push("Grocery Mart", "Main Street");
+    }
+
+    if (timeBlock === "Lunch") {
+      candidates.push("Willow Cafe", "Willow Cafe", "Outdoor Patio", "Grocery Mart", home);
+    }
+
+    if (["LateAfternoon", "Evening"].includes(timeBlock)) {
+      candidates.push("Central Park", "Willow Cafe", "Willow Cafe", "Outdoor Patio", "Picnic Area", "Pond Bench Area");
+      if (npc.trait1 === "Adventurous" || npc.trait2 === "Adventurous") candidates.push("Walking Trails");
+      if (npc.trait1 === "Outgoing"    || npc.trait2 === "Outgoing")    candidates.push("Willow Cafe", "Barber Shop / Salon");
+    }
+
+    if (timeBlock === "LateEvening") {
+      candidates.push(home, "Library", "Reading Nook");
+    }
+
+    if (candidates.length === 0) candidates = [anchor, "Main Street", "Central Park", home];
+
+    const area = randomFrom(candidates);
+    const subs = AREA_SUBAREAS[area] || AREA_SUBAREAS["Main Street"] || [];
+    return randomFrom(subs);
+  }
+
+  // ───────────────────────────────────────────────
+  // OUTFIT LOGIC
+  // ───────────────────────────────────────────────
+
+  function getCurrentOutfit(npc, timeBlock, location) {
+    const ageGroup = getAgeGroup(npc.age);
+    const isHome = location.startsWith("Home ");
+    const isSleepTime = (timeBlock === "Night") || (timeBlock === "LateEvening" && Math.random() < CONFIG.LATE_EVENING_SLEEP_PROB);
+
+    if (isHome && isSleepTime) {
+      const pjs = CLOTHING[npc.sex]?.Pajamas?.[ageGroup] || DEFAULT_CLOTHING[npc.sex];
+      return {
+        ...pjs,
+        accessories: "none",
+        bra: npc.sex === "female" && npc.age >= 13 ? "none" : undefined
+      };
+    }
+
+    const genderClothing = CLOTHING[npc.sex] || {};
+    let outfitData = genderClothing[npc.style]?.[ageGroup] || genderClothing[npc.style]?.adult || DEFAULT_CLOTHING[npc.sex];
+
+    let outfit = {
+      hat:         randomFrom(outfitData.hat         || ["none"]),
+      top:         randomFrom(outfitData.top         || ["t-shirt"]),
+      bottom:      randomFrom(outfitData.bottom      || ["jeans"]),
+      shoes:       randomFrom(outfitData.shoes       || ["sneakers"]),
+      accessories: randomFrom(outfitData.accessories || ["none"]),
+      underwear:   randomFrom(outfitData.underwear   || (npc.sex === "male" ? ["boxers"] : ["panties"])),
+    };
+
+    if (npc.sex === "female" && npc.age >= 13) {
+      outfit.bra = randomFrom(outfitData.bra || ["standard bra"]);
+    }
+
+    if (isHome && !isSleepTime) {
+      outfit.top = randomFrom(["hoodie", "t-shirt", "comfort top"]);
+      outfit.bottom = randomFrom(["sweatpants", "shorts", "leggings"]);
+      outfit.shoes = "slippers or socks";
+    }
+
+    if (npc.age >= 13) {
+      const occ = npc.occupation;
+      if (occ.includes("Doctor")) {
+        outfit.top = npc.sex === "male" ? "white coat over shirt" : "white coat over blouse";
+        outfit.bottom = npc.sex === "male" ? "slacks" : "slacks or skirt";
+        outfit.shoes = "dress shoes";
+      } else if (occ.includes("Nurse")) {
+        outfit.top = "scrubs top";
+        outfit.bottom = "scrubs pants";
+        outfit.shoes = "nursing clogs";
+      } else if (occ.includes("Police Officer")) {
+        outfit.top = "police uniform shirt";
+        outfit.bottom = "uniform trousers";
+        outfit.hat = "police hat";
+        outfit.shoes = "polished boots";
+      } else if (occ.includes("Chef")) {
+        outfit.top = "chef jacket";
+        outfit.bottom = "checkered pants";
+        outfit.hat = "chef hat";
+      } else if (occ.includes("Mechanic")) {
+        outfit.top = "greasy overalls";
+        outfit.bottom = "work pants";
+        outfit.shoes = "steel toe boots";
+      } else if (occ.includes("Teacher")) {
+        outfit.top = npc.sex === "male" ? "dress shirt" : "blouse";
+        outfit.bottom = npc.sex === "male" ? "slacks" : "skirt or slacks";
+        outfit.shoes = "dress shoes";
+      }
+    }
+
+    return outfit;
+  }
+
+  function formatOutfitSummary(outfit) {
+    const parts = [];
+    if (outfit.hat && outfit.hat !== "none") parts.push(outfit.hat);
+    parts.push(outfit.top);
+    if (outfit.bra) parts.push(`bra: ${outfit.bra}`);
+    parts.push(outfit.bottom);
+    if (outfit.underwear && outfit.underwear !== "none" && outfit.underwear !== "diaper") parts.push(`under: ${outfit.underwear}`);
+    parts.push(outfit.shoes);
+    return parts.filter(Boolean).join(" • ") || "casual clothes";
+  }
+
+  // ───────────────────────────────────────────────
+  // UI RENDERING
+  // ───────────────────────────────────────────────
+
+  function createTimeButtons() {
+    dom.timeButtons.innerHTML = "";
+    Object.entries(TIME_BLOCKS).forEach(([key, {label, emoji}]) => {
+      const btn = document.createElement("button");
+      btn.textContent = `${emoji} ${label}`;
+      btn.onclick = () => setTimePeriod(key);
+      dom.timeButtons.appendChild(btn);
+    });
+  }
+
+  function createLocationAccordion() {
+    dom.locationAccordion.innerHTML = "";
+
+    const icons = {
+      "Residential Area": "🏡",
+      "Main Street": "🛍️",
+      "Central Park": "🌳",
+      "Town Hall": "🏛️",
+      "Local Clinic": "🏥",
+      "Library": "📚",
+      "Schoolyard / Elementary School": "🏫",
+    };
+
+    Object.keys(AREA_SUBAREAS).forEach(area => {
+      const item = document.createElement("div");
+      item.className = "accordion-item";
+
+      const header = document.createElement("button");
+      header.className = "accordion-header";
+      header.innerHTML = `${icons[area] || "📍"} ${area} <span class="location-count">(0)</span>`;
+      header.dataset.area = area;
+      header.onclick = () => {
+        item.classList.toggle("active");
+        showLocation(area);
+      };
+
+      const content = document.createElement("div");
+      content.className = "accordion-content";
+
+      const subs = AREA_SUBAREAS[area] || [];
+      if (subs.length) {
+        const ul = document.createElement("ul");
+        subs.forEach(sub => {
+          const li = document.createElement("li");
+          const btn = document.createElement("button");
+          let icon = "";
+          if (sub.startsWith("Home ")) icon = "🏠 ";
+          else if (sub.includes("Cafe") || sub.includes("Patio")) icon = "☕ ";
+          else if (sub.includes("Playground")) icon = "🛝 ";
+          else if (sub.includes("Picnic") || sub.includes("Pond")) icon = "🌿 ";
+          else if (sub.includes("Classroom") || sub.includes("Cafeteria")) icon = "📖 ";
+          else if (sub.includes("Reading Nook")) icon = "🪑 ";
+          else if (sub.includes("Gym")) icon = "🏀 ";
+          btn.innerHTML = `${icon}${sub}`;
+          btn.onclick = () => showLocation(sub);
+          li.appendChild(btn);
+          ul.appendChild(li);
+        });
+        content.appendChild(ul);
+      }
+
+      item.append(header, content);
+      dom.locationAccordion.appendChild(item);
+    });
+  }
+
+  function updateLocationCounts() {
+    document.querySelectorAll(".accordion-header").forEach(header => {
+      const area = header.dataset.area;
+      if (!area) return;
+      const locations = AREA_SUBAREAS[area] || [area];
+      const count = state.npcs.filter(n => locations.includes(n.currentLocation)).length;
+      header.querySelector(".location-count").textContent = `(${count})`;
+    });
+  }
+
+  function setTimePeriod(block) {
+    state.currentTimeBlock = block;
+    dom.timeDisplay.textContent = `Current time: ${TIME_BLOCKS[block].label}`;
+
+    document.querySelectorAll("#locations button").forEach(b => b.classList.remove("active-time"));
+    const activeBtn = Array.from(dom.timeButtons.querySelectorAll("button"))
+      .find(b => b.textContent.includes(TIME_BLOCKS[block].label));
+    if (activeBtn) activeBtn.classList.add("active-time");
+
+    updateNPCLocations();
+    updateLocationCounts();
+    refreshCurrentView();
+  }
+
+  function updateNPCLocations() {
+    state.npcs.forEach(npc => {
+      npc.currentLocation = determineLocation(npc, state.currentTimeBlock);
+    });
+  }
+
+  function renderNPCCard(npc, container, showHome = false) {
+    const outfit = getCurrentOutfit(npc, state.currentTimeBlock, npc.currentLocation);
+    const summary = formatOutfitSummary(outfit);
+
+    const card = document.createElement("div");
+    card.className = "npc-card";
+    card.innerHTML = `
+      <h3>${npc.name}</h3>
+      <p>Age: ${npc.age} • ${npc.sex} • ${npc.occupation}</p>
+      <p class="personality">${npc.trait1}, ${npc.trait2}</p>
+      <p class="outfit">Style: ${npc.style}<br>Wearing: ${summary}</p>
+      <p class="subarea-note">Currently at: ${npc.currentLocation}${showHome ? ` • Home: ${npc.home}` : ""}</p>
+    `;
+    card.onclick = () => showNPCDetail(npc);
+    container.appendChild(card);
+  }
+
+  function showLocation(locationName) {
+    dom.locationTitle.textContent = locationName;
+    dom.locationDesc.textContent = AREA_DESCRIPTIONS[locationName] || "A familiar corner of Willow Creek.";
+
+    dom.npcGrid.innerHTML = "";
+
+    const subLocations = AREA_SUBAREAS[locationName] || [locationName];
+    const here = state.npcs
+      .filter(n => subLocations.includes(n.currentLocation))
+      .sort((a,b) => a.name.localeCompare(b.name));
+
+    if (!here.length) {
+      dom.npcGrid.innerHTML = `<p style="text-align:center; color:#757575; font-style:italic; padding:40px 0;">The place is quiet right now...</p>`;
+      return;
+    }
+
+    here.forEach(npc => renderNPCCard(npc, dom.npcGrid));
+  }
+
+  function showAllResidents() {
+    dom.locationTitle.textContent = "All Residents of Willow Creek";
+    dom.locationDesc.textContent = "From babies napping in cribs to retirees on porches — everyone has a place in this close-knit community.";
+
+    dom.npcGrid.innerHTML = "";
+    [...state.npcs]
+      .sort((a,b) => a.name.localeCompare(b.name))
+      .forEach(npc => renderNPCCard(npc, dom.npcGrid, true));
+  }
+
+  function showNPCDetail(npc) {
+    const outfit = getCurrentOutfit(npc, state.currentTimeBlock, npc.currentLocation);
+
+    let physical = "";
+    if (npc.age >= 18) {
+      if (npc.sex === "female") {
+        physical = `
+          <div class="clothing-section">
+            <h3>Female Physical Details</h3>
+            <p><strong>Hips:</strong> ${npc.hips}</p>
+            <p><strong>Butt:</strong> ${npc.butt}</p>
+            <p><strong>Breasts:</strong> ${npc.breastSize}, ${npc.breastShape}</p>
+          </div>`;
+      } else {
+        physical = `
+          <div class="clothing-section">
+            <h3>Male Physical Details</h3>
+            <p><strong>Penis size:</strong> ${npc.penisSize}</p>
+          </div>`;
+      }
+    } else {
+      physical = `<p class="minor-note">${npc.age < 13 ? "Child" : "Teen"} resident — age-appropriate details only</p>`;
+    }
+
+    let clothingHTML = `
+      <div class="clothing-section">
+        <h3>Current Outfit (${npc.style})</h3>
+        ${outfit.hat !== "none" ? `<div class="clothing-item"><strong>Hat:</strong> ${outfit.hat}</div>` : ""}
+        <div class="clothing-item"><strong>Top:</strong> ${outfit.top}</div>
+        ${outfit.bra && npc.age >= 13 ? `<div class="clothing-item"><strong>Bra:</strong> ${outfit.bra}</div>` : ""}
+        <div class="clothing-item"><strong>Bottom:</strong> ${outfit.bottom}</div>
+        ${outfit.underwear && outfit.underwear !== "none" && outfit.underwear !== "diaper" ? `<div class="clothing-item"><strong>Underwear:</strong> ${outfit.underwear}</div>` : ""}
+        <div class="clothing-item"><strong>Shoes:</strong> ${outfit.shoes}</div>
+        ${outfit.accessories !== "none" ? `<div class="clothing-item"><strong>Accessories:</strong> ${outfit.accessories}</div>` : ""}
+      </div>`;
+
+    let familyHTML = `<div class="family-section"><h3>Family Information</h3>
+      <p><strong>Role:</strong> ${npc.familyRole || "Independent"}</p>`;
+    if (npc.spouseName) familyHTML += `<p><strong>Spouse:</strong> ${npc.spouseName}</p>`;
+    if (npc.childrenNames?.length) familyHTML += `<p><strong>Children:</strong> ${npc.childrenNames.join(", ")}</p>`;
+    if (npc.parentNames?.length) familyHTML += `<p><strong>Parents:</strong> ${npc.parentNames.join(", ")}</p>`;
+    familyHTML += "</div>";
+
+    dom.detailContent.innerHTML = `
+      <h2>${npc.name}</h2>
+      <p><strong>Age:</strong> ${npc.age} • <strong>Sex:</strong> ${npc.sex}</p>
+      <p><strong>Occupation:</strong> ${npc.occupation}</p>
+      <p><strong>Current location:</strong> ${npc.currentLocation}</p>
+      <p><strong>Home:</strong> ${npc.home}</p>
+
+      <h3>Appearance</h3>
+      <p><strong>Skin:</strong> ${npc.skinColor}<br>
+         <strong>Hair:</strong> ${npc.hairLength} ${npc.hairColor}</p>
+      <p><strong>Eyes:</strong> ${npc.eyeShape} shape, ${npc.eyeColor}</p>
+      <p><strong>Facial features:</strong> ${npc.facialFeature}<br>
+         <strong>Body shape:</strong> ${npc.bodyShape}</p>
+
+      <div class="personality-section">
+        <h3>Personality</h3>
+        <p class="personality">${npc.trait1}, ${npc.trait2}</p>
+      </div>
+
+      ${clothingHTML}
+      ${physical}
+      ${familyHTML}
+    `;
+
+    dom.npcDetail.style.display = "block";
+  }
+
+  function closeDetail() {
+    dom.npcDetail.style.display = "none";
+  }
+
+  function refreshCurrentView() {
+    const title = dom.locationTitle.textContent.trim();
+    if (title === "All Residents of Willow Creek") showAllResidents();
+    else if (title !== "Welcome to Willow Creek") showLocation(title);
+  }
+
+  // ───────────────────────────────────────────────
+  // INIT
+  // ───────────────────────────────────────────────
+
+  function init() {
+    state.npcs = generateTown();
+
+    createTimeButtons();
+    createLocationAccordion();
+
+    dom.timeDisplay.textContent = `Current time: ${TIME_BLOCKS[state.currentTimeBlock].label}`;
+
+    const defaultBtn = Array.from(dom.timeButtons.querySelectorAll("button"))
+      .find(b => b.textContent.includes(TIME_BLOCKS[state.currentTimeBlock].label));
+    if (defaultBtn) defaultBtn.classList.add("active-time");
+
+    updateNPCLocations();
+    updateLocationCounts();
+
+    document.querySelector('[data-action="all-residents"]').onclick = showAllResidents;
+    dom.npcDetail.querySelector(".close-btn").onclick = closeDetail;
+
+    setTimeout(() => showLocation("Willow Cafe"), 150);
+  }
+
+  init();
+
+})();
+</script>
+</body>
+</html>
