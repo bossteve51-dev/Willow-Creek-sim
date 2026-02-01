@@ -255,7 +255,24 @@
   // ───────────────────────────────────────────────
   // CONFIG & CONSTANTS
   // ───────────────────────────────────────────────
+  // Test loading JSON from the same repo
+  
+async function testJsonLoad() {
+  try {
+    const response = await fetch('example-data.json');  // relative path — works on GitHub Pages
+    if (!response.ok) throw new Error('File not found');
+    const data = await response.json();
+    console.log('Loaded JSON:', data);
+    alert('JSON loaded! Message: ' + data.message + '\nPopulation: ' + data.population);
+  } catch (err) {
+    console.error('JSON load failed:', err);
+    alert('Oops — couldn\'t load the JSON. Check console?');
+  }
+}
 
+// Call it when the game starts
+// Add this line inside your init() function:
+testJsonLoad();
   const CONFIG = {
     TOTAL_POPULATION: 100,
     NIGHT_HOME_PROB: 0.80,
