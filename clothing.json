@@ -63,6 +63,4 @@
     {"name": "sweater", "sex": ["unisex"], "slot": "top", "styles": ["all"], "coverage": ["chest", "nipples"], "malfunctionChance": 0.01, "ageGroups": ["kid","teen","adult","senior"]},
     {"name": "sundress", "sex": ["female"], "slot": "top", "styles": ["bohemian", "preppy"], "coverage": ["chest", "breasts", "butt"], "malfunctionChance": 0.08, "ageGroups": ["teen","adult"]}
   ]
-
-  ]
 }
