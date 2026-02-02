@@ -40,6 +40,7 @@
     {"name": "flannel shirt", "sex": ["unisex"], "slot": "top", "styles": ["casual", "bohemian"], "coverage": ["chest", "nipples"], "malfunctionChance": 0.02, "ageGroups": ["teen","adult","senior"]},
     {"name": "standard bra", "sex": ["female"], "slot": "bra", "styles": ["preppy", "casual", "conservative"], "coverage": ["breasts", "nipples"], "malfunctionChance": 0.05, "ageGroups": ["teen","adult","senior"]},
     {"name": "sports bra", "sex": ["female"], "slot": "bra", "styles": ["jock"], "coverage": ["breasts", "nipples"], "malfunctionChance": 0.08, "ageGroups": ["teen","adult"]},
+    {"name": "no", "sex": ["female"], "slot": "bra", "styles": ["revealing", "bohemian"], "coverage": [], "malfunctionChance": 0, "ageGroups": ["adult"]},
     {"name": "lace bra", "sex": ["female"], "slot": "bra", "styles": ["revealing", "bohemian"], "coverage": ["nipples"], "malfunctionChance": 0.12, "ageGroups": ["adult"]},
     {"name": "jeans", "sex": ["unisex"], "slot": "bottom", "styles": ["casual", "emo"], "coverage": ["butt", "genitals", "crotch", "legs"], "malfunctionChance": 0.01, "ageGroups": ["teen","adult","senior"]},
     {"name": "khaki shorts", "sex": ["unisex"], "slot": "bottom", "styles": ["preppy", "casual"], "coverage": ["butt", "genitals", "crotch"], "malfunctionChance": 0.03, "ageGroups": ["kid","teen","adult"]},
@@ -60,6 +61,8 @@
     {"name": "pajama pants", "sex": ["unisex"], "slot": "bottom", "styles": ["pajamas"], "coverage": ["butt", "legs"], "malfunctionChance": 0.02, "ageGroups": ["kid","teen","adult","senior"]},
     {"name": "pajama top", "sex": ["unisex"], "slot": "top", "styles": ["pajamas"], "coverage": ["chest", "nipples"], "malfunctionChance": 0.02, "ageGroups": ["kid","teen","adult","senior"]},
     {"name": "nightgown", "sex": ["female"], "slot": "top", "styles": ["pajamas"], "coverage": ["chest", "breasts", "butt"], "malfunctionChance": 0.10, "ageGroups": ["adult","senior"]},
+    {"name": "nude", "sex": ["unisex"], "slot": "bottom", "styles": ["pajamas"], "coverage": [], "malfunctionChance": 0, "ageGroups": ["adult","senior"]},
+    {"name": "nude", "sex": ["unisex"], "slot": "top", "styles": ["pajamas"], "coverage": [], "malfunctionChance": 0, "ageGroups": ["adult","senior"]},
     {"name": "sweater", "sex": ["unisex"], "slot": "top", "styles": ["all"], "coverage": ["chest", "nipples"], "malfunctionChance": 0.01, "ageGroups": ["kid","teen","adult","senior"]},
     {"name": "sundress", "sex": ["female"], "slot": "top", "styles": ["bohemian", "preppy"], "coverage": ["chest", "breasts", "butt"], "malfunctionChance": 0.08, "ageGroups": ["teen","adult"]}
   ]
