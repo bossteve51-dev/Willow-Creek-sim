@@ -1,6 +1,6 @@
 {
   "colors": {
-    "normal": ["white", "black", "gray", "navy", "beige", "khaki", "brown", "charcoal"],
+    "normal": ["white", "black", "navy", "beige", "khaki", "brown", "charcoal"],
     "pastel": ["light blue", "soft pink", "mint green", "lavender", "pale yellow", "peach"],
     "dark": ["deep red", "forest green", "burgundy", "midnight blue", "chocolate"]
   },
