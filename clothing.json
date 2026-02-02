@@ -38,8 +38,8 @@
     {"name": "jeans", "sex": ["unisex"], "slot": "bottom", "styles": ["casual", "emo"], "coverage": ["butt", "genitals", "crotch", "legs"], "malfunctionChance": 0.01, "ageGroups": ["teen","adult","senior"]},
     {"name": "khaki shorts", "sex": ["unisex"], "slot": "bottom", "styles": ["preppy", "casual"], "coverage": ["butt", "genitals", "crotch"], "malfunctionChance": 0.03, "ageGroups": ["kid","teen","adult"]},
     {"name": "skirt", "sex": ["female"], "slot": "bottom", "styles": ["preppy", "bohemian"], "coverage": ["butt", "crotch"], "malfunctionChance": 0.15, "ageGroups": ["teen","adult"]},
-    {"name": "boxers", "sex": ["male"], "slot": "underwear", "styles": ["all"], "coverage": ["genitals", "butt"], "malfunctionChance": 0.05, "ageGroups": ["teen","adult","senior"]},
-    {"name": "panties", "sex": ["female"], "slot": "underwear", "styles": ["all"], "coverage": ["genitals", "butt"], "malfunctionChance": 0.05, "ageGroups": ["teen","adult","senior"]},
+    {"name": "boxers", "sex": ["male"], "slot": "underwear", "styles": ["preppy", "bohemian", "casual", "conservative", "jock", "nerdy", "pajamas"], "coverage": ["genitals", "butt"], "malfunctionChance": 0.05, "ageGroups": ["teen","adult","senior"]},
+    {"name": "panties", "sex": ["female"], "slot": "underwear", "styles": ["preppy", "bohemian", "casual", "conservative", "jock", "nerdy", "pajamas"], "coverage": ["genitals", "butt"], "malfunctionChance": 0.05, "ageGroups": ["teen","adult","senior"]},
     {"name": "sneakers", "sex": ["unisex"], "slot": "shoes", "styles": ["casual", "jock"], "coverage": [], "malfunctionChance": 0, "ageGroups": ["kid","teen","adult"]},
     {"name": "penny loafers", "sex": ["unisex"], "slot": "shoes", "styles": ["preppy"], "coverage": [], "malfunctionChance": 0, "ageGroups": ["adult","senior"]},
     // Add more items here anytime — just follow the pattern!
