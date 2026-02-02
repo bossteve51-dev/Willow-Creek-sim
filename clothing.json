@@ -1,0 +1,49 @@
+{
+  "colors": {
+    "normal": ["white", "black", "gray", "navy", "beige", "khaki", "brown", "charcoal"],
+    "pastel": ["light blue", "soft pink", "mint green", "lavender", "pale yellow", "peach"],
+    "dark": ["deep red", "forest green", "burgundy", "midnight blue", "chocolate"]
+  },
+  "fabrics": ["cotton", "denim", "polyester", "linen", "wool", "silk", "blend"],
+  "colorWeightsByStyle": {
+    "preppy": { "normal": 0.6, "pastel": 0.3, "dark": 0.1 },
+    "casual": { "normal": 0.7, "pastel": 0.2, "dark": 0.1 },
+    "emo": { "normal": 0.3, "pastel": 0.1, "dark": 0.6 },
+    "nerdy": { "normal": 0.7, "pastel": 0.2, "dark": 0.1 },
+    "jock": { "normal": 0.5, "pastel": 0.1, "dark": 0.4 },
+    "conservative": { "normal": 0.8, "pastel": 0.1, "dark": 0.1 },
+    "revealing": { "normal": 0.4, "pastel": 0.4, "dark": 0.2 },
+    "bohemian": { "normal": 0.3, "pastel": 0.5, "dark": 0.2 },
+    "pajamas": { "normal": 0.6, "pastel": 0.3, "dark": 0.1 }
+  },
+  "fabricWeightsByStyle": {
+    "preppy": { "cotton": 0.4, "polyester": 0.3, "wool": 0.2, "linen": 0.1 },
+    "casual": { "cotton": 0.6, "denim": 0.2, "polyester": 0.2 },
+    "emo": { "cotton": 0.4, "polyester": 0.4, "blend": 0.2 },
+    "nerdy": { "cotton": 0.5, "polyester": 0.3, "blend": 0.2 },
+    "jock": { "polyester": 0.5, "cotton": 0.4, "blend": 0.1 },
+    "conservative": { "wool": 0.4, "cotton": 0.4, "linen": 0.2 },
+    "revealing": { "cotton": 0.5, "polyester": 0.3, "silk": 0.2 },
+    "bohemian": { "linen": 0.4, "cotton": 0.3, "silk": 0.2, "blend": 0.1 },
+    "pajamas": { "cotton": 0.7, "polyester": 0.3 }
+  },
+  "items": [
+    {"name": "t-shirt", "sex": ["unisex"], "slot": "top", "styles": ["casual", "jock", "nerdy"], "coverage": ["chest", "nipples"], "malfunctionChance": 0.02, "ageGroups": ["kid","teen","adult","senior"]},
+    {"name": "polo shirt", "sex": ["unisex"], "slot": "top", "styles": ["preppy", "casual"], "coverage": ["chest", "nipples"], "malfunctionChance": 0.01, "ageGroups": ["kid","teen","adult"]},
+    {"name": "button-down shirt", "sex": ["unisex"], "slot": "top", "styles": ["preppy", "conservative"], "coverage": ["chest", "nipples"], "malfunctionChance": 0.01, "ageGroups": ["teen","adult","senior"]},
+    {"name": "hoodie", "sex": ["unisex"], "slot": "top", "styles": ["casual", "emo"], "coverage": ["chest", "nipples"], "malfunctionChance": 0.03, "ageGroups": ["kid","teen","adult"]},
+    {"name": "blouse", "sex": ["female"], "slot": "top", "styles": ["preppy", "conservative"], "coverage": ["chest", "breasts", "nipples"], "malfunctionChance": 0.02, "ageGroups": ["teen","adult","senior"]},
+    {"name": "standard bra", "sex": ["female"], "slot": "bra", "styles": ["preppy", "casual", "conservative"], "coverage": ["breasts", "nipples"], "malfunctionChance": 0.05, "ageGroups": ["teen","adult","senior"]},
+    {"name": "sports bra", "sex": ["female"], "slot": "bra", "styles": ["jock"], "coverage": ["breasts", "nipples"], "malfunctionChance": 0.08, "ageGroups": ["teen","adult"]},
+    {"name": "jeans", "sex": ["unisex"], "slot": "bottom", "styles": ["casual", "emo"], "coverage": ["butt", "genitals", "crotch", "legs"], "malfunctionChance": 0.01, "ageGroups": ["teen","adult","senior"]},
+    {"name": "khaki shorts", "sex": ["unisex"], "slot": "bottom", "styles": ["preppy", "casual"], "coverage": ["butt", "genitals", "crotch"], "malfunctionChance": 0.03, "ageGroups": ["kid","teen","adult"]},
+    {"name": "skirt", "sex": ["female"], "slot": "bottom", "styles": ["preppy", "bohemian"], "coverage": ["butt", "crotch"], "malfunctionChance": 0.15, "ageGroups": ["teen","adult"]},
+    {"name": "boxers", "sex": ["male"], "slot": "underwear", "styles": ["all"], "coverage": ["genitals", "butt"], "malfunctionChance": 0.05, "ageGroups": ["teen","adult","senior"]},
+    {"name": "panties", "sex": ["female"], "slot": "underwear", "styles": ["all"], "coverage": ["genitals", "butt"], "malfunctionChance": 0.05, "ageGroups": ["teen","adult","senior"]},
+    {"name": "sneakers", "sex": ["unisex"], "slot": "shoes", "styles": ["casual", "jock"], "coverage": [], "malfunctionChance": 0, "ageGroups": ["kid","teen","adult"]},
+    {"name": "penny loafers", "sex": ["unisex"], "slot": "shoes", "styles": ["preppy"], "coverage": [], "malfunctionChance": 0, "ageGroups": ["adult","senior"]},
+    // Add more items here anytime — just follow the pattern!
+    {"name": "pajama pants", "sex": ["unisex"], "slot": "bottom", "styles": ["pajamas"], "coverage": ["butt", "legs"], "malfunctionChance": 0.02, "ageGroups": ["kid","teen","adult","senior"]},
+    {"name": "pajama top", "sex": ["unisex"], "slot": "top", "styles": ["pajamas"], "coverage": ["chest", "nipples"], "malfunctionChance": 0.02, "ageGroups": ["kid","teen","adult","senior"]}
+  ]
+}
