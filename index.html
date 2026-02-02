@@ -99,20 +99,27 @@
       cursor: pointer;
       transition: background 0.2s;
       position: relative;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding-right: 70px; /* reserve space for count badge */
     }
 
     .accordion-header:hover { background: #dcedc8; }
 
     .location-count {
       position: absolute;
-      right: 18px;
+      right: 16px;
       top: 50%;
       transform: translateY(-50%);
-      font-size: 0.85em;
-      opacity: 0.75;
-      background: rgba(255,255,255,0.7);
-      padding: 2px 8px;
+      font-size: 0.9em;
+      min-width: 28px;
+      text-align: center;
+      padding: 4px 8px;
       border-radius: 12px;
+      background: rgba(255,255,255,0.8);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      opacity: 0.9;
     }
 
     .accordion-content {
@@ -411,16 +418,17 @@
       const res = await fetch('clothing.json');
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       CLOTHING_DATA = await res.json();
-      console.log("Clothing data loaded");
+      console.log("Clothing data loaded successfully");
     } catch (err) {
-      console.error("Failed to load clothing.json", err);
-      alert("Could not load clothing styles — using basic fallback.");
+      console.error("Failed to load clothing.json:", err);
+      // Silent fallback – no alert spam, just log
     }
   }
 
   function pickItem(npc, slot, styleOverride = null) {
     if (!CLOTHING_DATA) {
-      return { name: slot === "top" ? "t-shirt" : "shorts", color: "gray", fabric: "cotton", coverage: [], malfunctionChance: 0 };
+      return { name: slot === "top" ? "t-shirt" : slot === "bottom" ? "shorts" : "none", 
+               color: "gray", fabric: "cotton", coverage: [], malfunctionChance: 0 };
     }
 
     const style = (styleOverride || npc.style).toLowerCase();
@@ -435,7 +443,8 @@
     );
 
     if (candidates.length === 0) {
-      return { name: slot === "top" ? "t-shirt" : slot === "bottom" ? "shorts" : "none", color: "gray", fabric: "cotton", coverage: [], malfunctionChance: 0 };
+      return { name: slot === "top" ? "t-shirt" : slot === "bottom" ? "shorts" : "none", 
+               color: "gray", fabric: "cotton", coverage: [], malfunctionChance: 0 };
     }
 
     const item = randomFrom(candidates);
@@ -477,9 +486,12 @@
     const facialFeature = inherit(parent1?.facialFeature, parent2?.facialFeature, APPEARANCE.facialFeatures);
 
     let hairLength = randomFrom(APPEARANCE.hairLengths);
+
     if (sex === "male" && age >= 30 && Math.random() < 0.22) {
       hairLength = "bald";
       hairColor = "N/A";
+    } else if (!hairColor || hairColor === "N/A") {
+      hairColor = randomFrom(APPEARANCE.hairColors);
     }
 
     const npc = {
@@ -543,7 +555,6 @@
     let homeCounter = 1;
     const assignedHomes = new Map();
 
-    // 15 married couples + children
     for (let i = 0; i < 15; i++) {
       const ln = randomFrom(LAST_NAMES);
       let home = assignedHomes.get(ln) || `Home ${homeCounter++}`;
@@ -580,7 +591,6 @@
       npcs.push(husband, wife);
     }
 
-    // 8 single parents + children
     for (let i = 0; i < 8; i++) {
       const ln = randomFrom(LAST_NAMES);
       let home = assignedHomes.get(ln) || `Home ${homeCounter++}`;
@@ -609,7 +619,6 @@
       npcs.push(parent);
     }
 
-    // Fill remaining spots with singles
     while (npcs.length < CONFIG.TOTAL_POPULATION) {
       const age = 24 + Math.floor(Math.random() * 32);
       const sex = Math.random() < 0.5 ? "male" : "female";
@@ -724,6 +733,8 @@
       outfit.top = pickItem(npc, "top");
       outfit.bottom = pickItem(npc, "bottom");
       outfit.shoes = pickItem(npc, "shoes");
+
+      // Underwear & bra only if age allows
       if (wearsUndergarments) {
         outfit.underwear = pickItem(npc, "underwear");
         if (npc.sex === "female" && npc.age >= 13) {
