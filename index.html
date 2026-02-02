@@ -167,8 +167,6 @@
       border-color: var(--green-main);
     }
 
-    .outfit { font-style: italic; color: #5d4037; margin: 8px 0; font-size: 0.95em; }
-
     #npc-detail {
       display: none;
       position: fixed;
@@ -222,7 +220,7 @@
 
 <header>
   <h1>🌳 Willow Creek</h1>
-  </p> class="population">A quiet Southern town of 100 souls nestled among rolling hills</p>
+  <p class="population">A quiet Southern town of 100 souls nestled among rolling hills</p>
   <div id="time-display" class="time-display"></div>
 </header>
 
@@ -255,24 +253,7 @@
   // ───────────────────────────────────────────────
   // CONFIG & CONSTANTS
   // ───────────────────────────────────────────────
-  // Test loading JSON from the same repo
-  
-async function testJsonLoad() {
-  try {
-    const response = await fetch('example-data.json');  // relative path — works on GitHub Pages
-    if (!response.ok) throw new Error('File not found');
-    const data = await response.json();
-    console.log('Loaded JSON:', data);
-    alert('JSON loaded! Message: ' + data.message + '\nPopulation: ' + data.population);
-  } catch (err) {
-    console.error('JSON load failed:', err);
-    alert('Oops — couldn\'t load the JSON. Check console?');
-  }
-}
 
-// Call it when the game starts
-// Add this line inside your init() function:
-testJsonLoad();
   const CONFIG = {
     TOTAL_POPULATION: 100,
     NIGHT_HOME_PROB: 0.80,
@@ -302,8 +283,6 @@ testJsonLoad();
 
   const PERSONALITY_TRAITS = ["Kind","Grumpy","Optimistic","Pessimistic","Shy","Outgoing","Ambitious","Laid-back","Intelligent","Creative","Stubborn","Flexible","Generous","Selfish","Loyal","Independent","Adventurous","Cautious","Humorous","Serious","Patient","Impatient","Energetic","Calm","Curious","Reserved","Honest","Sarcastic","Empathetic","Competitive"];
 
-  const STYLES = ["Preppy", "Emo", "Nerdy", "Jock", "Conservative", "Revealing", "Bohemian", "Casual"];
-
   const APPEARANCE = {
     skinColors: ["fair", "light", "medium", "olive", "tan", "dark", "ebony"],
     hairColors: ["blonde", "light brown", "brown", "dark brown", "black", "red", "auburn", "gray", "silver"],
@@ -323,144 +302,6 @@ testJsonLoad();
 
   const MALE_SPECIFIC = {
     penisSize: ["micro (.5-1 inches)", "tiny (2-3 inches)", "small (4-5 inches)", "average (5-6 inches)", "above average (6-7 inches)", "large (7-8 inches)", "very large (8+ inches)"],
-  };
-
-  const CLOTHING = {
-    male: {
-      Preppy: {
-        infant: { top: ["onesie"], bottom: ["diaper cover"], shoes: ["none"], hat: ["none"], underwear: ["diaper"] },
-        kid:    { top: ["polo shirt"], bottom: ["khaki shorts"], shoes: ["sneakers"], hat: ["baseball cap"], underwear: ["briefs"] },
-        teen:   { top: ["polo shirt", "oxford shirt"], bottom: ["chinos"], shoes: ["loafers"], hat: ["none"], underwear: ["boxer-briefs"] },
-        adult:  { top: ["polo shirt", "oxford button-down"], bottom: ["khaki chinos", "navy slacks"], shoes: ["penny loafers"], hat: ["none"], underwear: ["boxers"] },
-        senior: { top: ["sweater vest over shirt"], bottom: ["wool trousers"], shoes: ["leather shoes"], hat: ["fedora"], underwear: ["boxers"] }
-      },
-      Emo: {
-        infant: { top: ["baby black tee"], bottom: ["soft pants"], shoes: ["none"], underwear: ["diaper"] },
-        kid:    { top: ["graphic tee"], bottom: ["black shorts"], shoes: ["converse"], underwear: ["briefs"] },
-        teen:   { top: ["band hoodie", "long-sleeve tee"], bottom: ["skinny black jeans"], shoes: ["converse"], hat: ["beanie"], underwear: ["black briefs"] },
-        adult:  { top: ["band t-shirt", "hoodie"], bottom: ["black jeans"], shoes: ["doc martens"], underwear: ["black boxer-briefs"] },
-        senior: { top: ["dark sweater"], bottom: ["dark slacks"], shoes: ["comfort shoes"], underwear: ["boxers"] }
-      },
-      Nerdy: {
-        infant: { top: ["cute printed onesie"], bottom: ["diaper cover"], shoes: ["none"], underwear: ["diaper"] },
-        kid:    { top: ["button-up with cartoon"], bottom: ["corduroy pants"], shoes: ["sneakers"], underwear: ["briefs"] },
-        teen:   { top: ["graphic tee under cardigan"], bottom: ["khakis"], shoes: ["canvas sneakers"], underwear: ["boxer-briefs"] },
-        adult:  { top: ["button-up with sweater vest"], bottom: ["corduroy pants"], shoes: ["oxford shoes"], underwear: ["boxers"] },
-        senior: { top: ["cardigan over shirt"], bottom: ["comfort pants"], shoes: ["loafers"], underwear: ["boxers"] }
-      },
-      Jock: {
-        infant: { top: ["tiny sports onesie"], bottom: ["diaper"], shoes: ["none"], underwear: ["diaper"] },
-        kid:    { top: ["team t-shirt"], bottom: ["athletic shorts"], shoes: ["sneakers"], underwear: ["briefs"] },
-        teen:   { top: ["athletic jersey", "tank top"], bottom: ["gym shorts"], shoes: ["basketball shoes"], underwear: ["athletic boxer-briefs"] },
-        adult:  { top: ["team polo", "compression shirt"], bottom: ["athletic shorts"], shoes: ["running sneakers"], underwear: ["sport trunks"] },
-        senior: { top: ["light jacket over tee"], bottom: ["track pants"], shoes: ["walking shoes"], underwear: ["boxers"] }
-      },
-      Conservative: {
-        infant: { top: ["classic onesie"], bottom: ["diaper cover"], shoes: ["none"], underwear: ["diaper"] },
-        kid:    { top: ["button-up shirt"], bottom: ["khakis"], shoes: ["loafers"], underwear: ["briefs"] },
-        teen:   { top: ["dress shirt"], bottom: ["slacks"], shoes: ["dress shoes"], underwear: ["boxer-briefs"] },
-        adult:  { top: ["long-sleeve button-up"], bottom: ["dress slacks"], shoes: ["brogues"], underwear: ["boxers"] },
-        senior: { top: ["sweater over collared shirt"], bottom: ["wool trousers"], shoes: ["leather shoes"], underwear: ["boxers"] }
-      },
-      Revealing: {
-        infant: { top: ["light onesie"], bottom: ["diaper"], shoes: ["none"], underwear: ["diaper"] },
-        kid:    { top: ["tank top"], bottom: ["shorts"], shoes: ["sandals"], underwear: ["briefs"] },
-        teen:   { top: ["muscle tank"], bottom: ["gym shorts"], shoes: ["flip-flops"], underwear: ["briefs"] },
-        adult:  { top: ["fitted t-shirt", "open button-up"], bottom: ["cargo shorts"], shoes: ["sandals"], underwear: ["tight boxer-briefs"] },
-        senior: { top: ["light polo"], bottom: ["comfort shorts"], shoes: ["sandals"], underwear: ["boxers"] }
-      },
-      Bohemian: {
-        infant: { top: ["soft patterned onesie"], bottom: ["diaper cover"], shoes: ["none"], underwear: ["diaper"] },
-        kid:    { top: ["loose tunic"], bottom: ["soft pants"], shoes: ["sandals"], underwear: ["briefs"] },
-        teen:   { top: ["flowy shirt"], bottom: ["loose trousers"], shoes: ["sandals"], underwear: ["boxer-briefs"] },
-        adult:  { top: ["linen shirt"], bottom: ["wide-leg pants"], shoes: ["leather sandals"], underwear: ["loose boxers"] },
-        senior: { top: ["comfortable tunic"], bottom: ["elastic pants"], shoes: ["espadrilles"], underwear: ["boxers"] }
-      },
-      Casual: {
-        infant: { top: ["baby tee"], bottom: ["diaper"], shoes: ["none"], underwear: ["diaper"] },
-        kid:    { top: ["t-shirt"], bottom: ["shorts"], shoes: ["sneakers"], underwear: ["briefs"] },
-        teen:   { top: ["hoodie", "t-shirt"], bottom: ["jeans"], shoes: ["sneakers"], underwear: ["boxer-briefs"] },
-        adult:  { top: ["t-shirt", "flannel"], bottom: ["jeans"], shoes: ["sneakers"], underwear: ["boxers"] },
-        senior: { top: ["comfort sweater"], bottom: ["elastic pants"], shoes: ["slippers"], underwear: ["boxers"] }
-      },
-      Pajamas: {
-        infant: { top: ["footie pajamas"], bottom: ["built-in"], shoes: ["none"], hat: ["none"], underwear: ["diaper"] },
-        kid:    { top: ["pajama top with print"], bottom: ["pajama pants"], shoes: ["none"], hat: ["none"], underwear: ["none"] },
-        teen:   { top: ["graphic pajama shirt"], bottom: ["pajama pants"], shoes: ["none"], hat: ["none"], underwear: ["none"] },
-        adult:  { top: ["pajama shirt"], bottom: ["pajama pants"], shoes: ["none"], hat: ["none"], underwear: ["none"] },
-        senior: { top: ["long-sleeve pajama top"], bottom: ["pajama pants"], shoes: ["slippers"], hat: ["none"], underwear: ["none"] }
-      }
-    },
-    female: {
-      Preppy: {
-        infant: { top: ["baby dress", "onesie"], bottom: ["diaper cover"], shoes: ["none"], hat: ["none"], underwear: ["diaper"] },
-        kid:    { top: ["polo shirt"], bottom: ["skort"], shoes: ["sneakers"], hat: ["headband"], underwear: ["panties"] },
-        teen:   { top: ["blouse"], bottom: ["pleated skirt"], shoes: ["loafers"], hat: ["none"], underwear: ["panties"], bra: ["training bra"] },
-        adult:  { top: ["blouse", "cardigan"], bottom: ["A-line skirt"], shoes: ["ballet flats"], underwear: ["hipster panties"], bra: ["standard bra"] },
-        senior: { top: ["cardigan over blouse"], bottom: ["long skirt"], shoes: ["low heels"], underwear: ["full-coverage panties"], bra: ["full coverage bra"] }
-      },
-      Casual: {
-        infant: { top: ["baby dress"], bottom: ["diaper"], shoes: ["none"], hat: ["none"], underwear: ["diaper"] },
-        kid:    { top: ["t-shirt"], bottom: ["leggings"], shoes: ["sneakers"], underwear: ["panties"] },
-        teen:   { top: ["tank top", "hoodie"], bottom: ["jeans"], shoes: ["sneakers"], underwear: ["panties"], bra: ["sports bra"] },
-        adult:  { top: ["t-shirt", "blouse"], bottom: ["jeans"], shoes: ["sneakers"], underwear: ["cotton panties"], bra: ["standard bra"] },
-        senior: { top: ["comfort sweater"], bottom: ["elastic pants"], shoes: ["slippers"], underwear: ["cotton briefs"], bra: ["comfort bra"] }
-      },
-      Emo: {
-        infant: { top: ["baby black tee"], bottom: ["soft pants"], shoes: ["none"], underwear: ["diaper"] },
-        kid:    { top: ["graphic tee"], bottom: ["black shorts"], shoes: ["converse"], underwear: ["panties"] },
-        teen:   { top: ["band hoodie", "long-sleeve tee"], bottom: ["skinny black jeans"], shoes: ["converse"], hat: ["beanie"], underwear: ["black panties"], bra: ["black bra"] },
-        adult:  { top: ["band t-shirt", "hoodie"], bottom: ["black jeans"], shoes: ["doc martens"], underwear: ["black panties"], bra: ["black bra"] },
-        senior: { top: ["dark sweater"], bottom: ["dark slacks"], shoes: ["comfort shoes"], underwear: ["black panties"], bra: ["black bra"] }
-      },
-      Nerdy: {
-        infant: { top: ["cute printed onesie"], bottom: ["diaper cover"], shoes: ["none"], underwear: ["diaper"] },
-        kid:    { top: ["button-up with cartoon"], bottom: ["corduroy pants"], shoes: ["sneakers"], underwear: ["panties"] },
-        teen:   { top: ["graphic tee under cardigan"], bottom: ["khakis"], shoes: ["canvas sneakers"], underwear: ["panties"], bra: ["standard bra"] },
-        adult:  { top: ["button-up with sweater vest"], bottom: ["corduroy pants"], shoes: ["oxford shoes"], underwear: ["cotton panties"], bra: ["standard bra"] },
-        senior: { top: ["cardigan over shirt"], bottom: ["comfort pants"], shoes: ["loafers"], underwear: ["cotton panties"], bra: ["standard bra"] }
-      },
-      Jock: {
-        infant: { top: ["tiny sports onesie"], bottom: ["diaper"], shoes: ["none"], underwear: ["diaper"] },
-        kid:    { top: ["team t-shirt"], bottom: ["athletic shorts"], shoes: ["sneakers"], underwear: ["panties"] },
-        teen:   { top: ["athletic jersey", "tank top"], bottom: ["gym shorts"], shoes: ["basketball shoes"], underwear: ["panties"], bra: ["sports bra"] },
-        adult:  { top: ["team polo", "compression shirt"], bottom: ["athletic shorts"], shoes: ["running sneakers"], underwear: ["panties"], bra: ["sports bra"] },
-        senior: { top: ["light jacket over tee"], bottom: ["track pants"], shoes: ["walking shoes"], underwear: ["panties"], bra: ["sports bra"] }
-      },
-      Conservative: {
-        infant: { top: ["classic onesie"], bottom: ["diaper cover"], shoes: ["none"], underwear: ["diaper"] },
-        kid:    { top: ["button-up shirt"], bottom: ["khakis"], shoes: ["loafers"], underwear: ["panties"] },
-        teen:   { top: ["dress shirt"], bottom: ["slacks"], shoes: ["dress shoes"], underwear: ["panties"], bra: ["standard bra"] },
-        adult:  { top: ["long-sleeve button-up"], bottom: ["dress slacks"], shoes: ["brogues"], underwear: ["cotton panties"], bra: ["standard bra"] },
-        senior: { top: ["sweater over collared shirt"], bottom: ["wool trousers"], shoes: ["leather shoes"], underwear: ["cotton panties"], bra: ["standard bra"] }
-      },
-      Revealing: {
-        infant: { top: ["light onesie"], bottom: ["diaper"], shoes: ["none"], underwear: ["diaper"] },
-        kid:    { top: ["tank top"], bottom: ["shorts"], shoes: ["sandals"], underwear: ["panties"] },
-        teen:   { top: ["muscle tank"], bottom: ["gym shorts"], shoes: ["flip-flops"], underwear: ["panties"], bra: ["none"] },
-        adult:  { top: ["fitted t-shirt", "open button-up"], bottom: ["cargo shorts"], shoes: ["sandals"], underwear: ["panties"], bra: ["none"] },
-        senior: { top: ["light polo"], bottom: ["comfort shorts"], shoes: ["sandals"], underwear: ["panties"], bra: ["none"] }
-      },
-      Bohemian: {
-        infant: { top: ["soft patterned onesie"], bottom: ["diaper cover"], shoes: ["none"], underwear: ["diaper"] },
-        kid:    { top: ["loose tunic"], bottom: ["soft pants"], shoes: ["sandals"], underwear: ["panties"] },
-        teen:   { top: ["flowy shirt"], bottom: ["loose trousers"], shoes: ["sandals"], underwear: ["panties"], bra: ["none"] },
-        adult:  { top: ["linen shirt"], bottom: ["wide-leg pants"], shoes: ["leather sandals"], underwear: ["panties"], bra: ["none"] },
-        senior: { top: ["comfortable tunic"], bottom: ["elastic pants"], shoes: ["espadrilles"], underwear: ["panties"], bra: ["none"] }
-      },
-      Pajamas: {
-        infant: { top: ["footie pajamas"], bottom: ["built-in"], shoes: ["none"], hat: ["none"], underwear: ["diaper"] },
-        kid:    { top: ["pajama top with pattern"], bottom: ["pajama shorts"], shoes: ["none"], hat: ["none"], underwear: ["panties"] },
-        teen:   { top: ["cute pajama set"], bottom: ["pajama pants"], shoes: ["none"], hat: ["none"], underwear: ["panties"], bra: ["none"] },
-        adult:  { top: ["pajama top"], bottom: ["pajama shorts"], shoes: ["none"], hat: ["none"], underwear: ["panties"], bra: ["none"] },
-        senior: { top: ["long nightgown"], bottom: ["none"], shoes: ["slippers"], hat: ["none"], underwear: ["panties"], bra: ["none"] }
-      }
-    }
-  };
-
-  const DEFAULT_CLOTHING = {
-    male:   { top: "t-shirt", bottom: "shorts", shoes: "none", hat: "none", underwear: "none" },
-    female: { top: "t-shirt", bottom: "shorts", shoes: "none", hat: "none", underwear: "panties" }
   };
 
   const AREA_SUBAREAS = {
@@ -548,6 +389,82 @@ testJsonLoad();
     return randomFrom(opts);
   }
 
+  function weightedRandom(weights) {
+    const keys = Object.keys(weights);
+    const total = Object.values(weights).reduce((a,b) => a+b, 0);
+    let r = Math.random() * total;
+    for (let k of keys) {
+      r -= weights[k];
+      if (r <= 0) return k;
+    }
+    return keys[0] || "normal";
+  }
+
+  // ───────────────────────────────────────────────
+  // CLOTHING LOADING & PICKING
+  // ───────────────────────────────────────────────
+
+  let CLOTHING_DATA = null;
+
+  async function loadClothingData() {
+    try {
+      const res = await fetch('clothing.json');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      CLOTHING_DATA = await res.json();
+      console.log("Clothing data loaded");
+    } catch (err) {
+      console.error("Failed to load clothing.json", err);
+      alert("Could not load clothing styles — using basic fallback.");
+    }
+  }
+
+  function pickItem(npc, slot, styleOverride = null) {
+    if (!CLOTHING_DATA) {
+      return { name: slot === "top" ? "t-shirt" : "shorts", color: "gray", fabric: "cotton", coverage: [], malfunctionChance: 0 };
+    }
+
+    const style = (styleOverride || npc.style).toLowerCase();
+    const ageGroup = getAgeGroup(npc.age);
+    const sex = npc.sex;
+
+    const candidates = CLOTHING_DATA.items.filter(item =>
+      (item.sex.includes("unisex") || item.sex.includes(sex)) &&
+      item.slot === slot &&
+      (item.styles.includes("all") || item.styles.includes(style)) &&
+      item.ageGroups.includes(ageGroup)
+    );
+
+    if (candidates.length === 0) {
+      return { name: slot === "top" ? "t-shirt" : slot === "bottom" ? "shorts" : "none", color: "gray", fabric: "cotton", coverage: [], malfunctionChance: 0 };
+    }
+
+    const item = randomFrom(candidates);
+
+    const colorCat = weightedRandom(CLOTHING_DATA.colorWeightsByStyle[style] || { normal: 1 });
+    const color = randomFrom(CLOTHING_DATA.colors[colorCat] || ["gray"]);
+
+    const fabricWeights = CLOTHING_DATA.fabricWeightsByStyle[style] || { cotton: 1 };
+    const fabric = randomFrom(Object.keys(fabricWeights));
+
+    return {
+      name: item.name,
+      color,
+      fabric,
+      coverage: item.coverage || [],
+      malfunctionChance: item.malfunctionChance || 0
+    };
+  }
+
+  function formatOutfitSummary(outfit) {
+    const parts = [];
+    if (outfit.top)    parts.push(`${outfit.top.color} ${outfit.top.fabric} ${outfit.top.name}`);
+    if (outfit.bra)    parts.push(`wearing a ${outfit.bra.color} bra`);
+    if (outfit.bottom) parts.push(`${outfit.bottom.color} ${outfit.bottom.fabric} ${outfit.bottom.name}`);
+    if (outfit.underwear) parts.push(`under: ${outfit.underwear.name}`);
+    if (outfit.shoes && outfit.shoes.name !== "none") parts.push(outfit.shoes.name);
+    return parts.join(" • ") || "casual everyday clothes";
+  }
+
   // ───────────────────────────────────────────────
   // NPC GENERATION
   // ───────────────────────────────────────────────
@@ -580,7 +497,7 @@ testJsonLoad();
       occupation: getOccupation(age),
       trait1: null,
       trait2: null,
-      style: randomFrom(STYLES),
+      style: randomFrom(["Preppy","Emo","Nerdy","Jock","Conservative","Revealing","Bohemian","Casual"]),
       familyRole: null,
       spouseName: null,
       childrenNames: null,
@@ -588,16 +505,21 @@ testJsonLoad();
       home: null,
       routineAnchor: null,
       currentLocation: null,
+      nippleSize: null,
+      nippleShape: null,
     };
 
     [npc.trait1, npc.trait2] = pickTwoTraits();
 
-    if (age >= 13) {
+    if (age >= 18) {
+      npc.nippleSize = randomFrom(["small", "average", "large", "prominent", "puffy", "very small", "inconspicuous"]);
+
       if (sex === "female") {
         npc.hips = randomFrom(FEMALE_SPECIFIC.hips);
         npc.butt = randomFrom(FEMALE_SPECIFIC.butt);
         npc.breastSize = randomFrom(FEMALE_SPECIFIC.breastSize);
         npc.breastShape = randomFrom(FEMALE_SPECIFIC.breastShape);
+        npc.nippleShape = randomFrom(["puffy", "flat", "inverted", "protruding", "erect", "dimpled", "asymmetrical"]);
       } else {
         npc.penisSize = randomFrom(MALE_SPECIFIC.penisSize);
       }
@@ -782,83 +704,41 @@ testJsonLoad();
   // ───────────────────────────────────────────────
 
   function getCurrentOutfit(npc, timeBlock, location) {
-    const ageGroup = getAgeGroup(npc.age);
     const isHome = location.startsWith("Home ");
     const isSleepTime = (timeBlock === "Night") || (timeBlock === "LateEvening" && Math.random() < CONFIG.LATE_EVENING_SLEEP_PROB);
-
-    if (isHome && isSleepTime) {
-      const pjs = CLOTHING[npc.sex]?.Pajamas?.[ageGroup] || DEFAULT_CLOTHING[npc.sex];
-      return {
-        ...pjs,
-        accessories: "none",
-        bra: npc.sex === "female" && npc.age >= 13 ? "none" : undefined
-      };
-    }
-
-    const genderClothing = CLOTHING[npc.sex] || {};
-    let outfitData = genderClothing[npc.style]?.[ageGroup] || genderClothing[npc.style]?.adult || DEFAULT_CLOTHING[npc.sex];
+    const wearsUndergarments = npc.age >= 16;
 
     let outfit = {
-      hat:         randomFrom(outfitData.hat         || ["none"]),
-      top:         randomFrom(outfitData.top         || ["t-shirt"]),
-      bottom:      randomFrom(outfitData.bottom      || ["jeans"]),
-      shoes:       randomFrom(outfitData.shoes       || ["sneakers"]),
-      accessories: randomFrom(outfitData.accessories || ["none"]),
-      underwear:   randomFrom(outfitData.underwear   || (npc.sex === "male" ? ["boxers"] : ["panties"])),
+      top: null,
+      bottom: null,
+      underwear: null,
+      bra: null,
+      shoes: null,
+      hat: null
     };
 
-    if (npc.sex === "female" && npc.age >= 13) {
-      outfit.bra = randomFrom(outfitData.bra || ["standard bra"]);
-    }
-
-    if (isHome && !isSleepTime) {
-      outfit.top = randomFrom(["hoodie", "t-shirt", "comfort top"]);
-      outfit.bottom = randomFrom(["sweatpants", "shorts", "leggings"]);
-      outfit.shoes = "slippers or socks";
-    }
-
-    if (npc.age >= 13) {
-      const occ = npc.occupation;
-      if (occ.includes("Doctor")) {
-        outfit.top = npc.sex === "male" ? "white coat over shirt" : "white coat over blouse";
-        outfit.bottom = npc.sex === "male" ? "slacks" : "slacks or skirt";
-        outfit.shoes = "dress shoes";
-      } else if (occ.includes("Nurse")) {
-        outfit.top = "scrubs top";
-        outfit.bottom = "scrubs pants";
-        outfit.shoes = "nursing clogs";
-      } else if (occ.includes("Police Officer")) {
-        outfit.top = "police uniform shirt";
-        outfit.bottom = "uniform trousers";
-        outfit.hat = "police hat";
-        outfit.shoes = "polished boots";
-      } else if (occ.includes("Chef")) {
-        outfit.top = "chef jacket";
-        outfit.bottom = "checkered pants";
-        outfit.hat = "chef hat";
-      } else if (occ.includes("Mechanic")) {
-        outfit.top = "greasy overalls";
-        outfit.bottom = "work pants";
-        outfit.shoes = "steel toe boots";
-      } else if (occ.includes("Teacher")) {
-        outfit.top = npc.sex === "male" ? "dress shirt" : "blouse";
-        outfit.bottom = npc.sex === "male" ? "slacks" : "skirt or slacks";
-        outfit.shoes = "dress shoes";
+    if (isHome && isSleepTime) {
+      outfit.top = pickItem(npc, "top", "pajamas");
+      outfit.bottom = pickItem(npc, "bottom", "pajamas");
+    } else {
+      outfit.top = pickItem(npc, "top");
+      outfit.bottom = pickItem(npc, "bottom");
+      outfit.shoes = pickItem(npc, "shoes");
+      if (wearsUndergarments) {
+        outfit.underwear = pickItem(npc, "underwear");
+        if (npc.sex === "female" && npc.age >= 13) {
+          outfit.bra = pickItem(npc, "bra");
+        }
       }
     }
 
-    return outfit;
-  }
+    if (isHome && !isSleepTime) {
+      outfit.top = pickItem(npc, "top", "casual");
+      outfit.bottom = pickItem(npc, "bottom", "casual");
+      outfit.shoes = { name: "slippers", color: "gray", fabric: "cotton", coverage: [], malfunctionChance: 0 };
+    }
 
-  function formatOutfitSummary(outfit) {
-    const parts = [];
-    if (outfit.hat && outfit.hat !== "none") parts.push(outfit.hat);
-    parts.push(outfit.top);
-    if (outfit.bra) parts.push(`bra: ${outfit.bra}`);
-    parts.push(outfit.bottom);
-    if (outfit.underwear && outfit.underwear !== "none" && outfit.underwear !== "diaper") parts.push(`under: ${outfit.underwear}`);
-    parts.push(outfit.shoes);
-    return parts.filter(Boolean).join(" • ") || "casual clothes";
+    return outfit;
   }
 
   // ───────────────────────────────────────────────
@@ -971,7 +851,7 @@ testJsonLoad();
       <h3>${npc.name}</h3>
       <p>Age: ${npc.age} • ${npc.sex} • ${npc.occupation}</p>
       <p class="personality">${npc.trait1}, ${npc.trait2}</p>
-      <p class="outfit">Style: ${npc.style}<br>Wearing: ${summary}</p>
+      <p class="outfit">Wearing: ${summary}</p>
       <p class="subarea-note">Currently at: ${npc.currentLocation}${showHome ? ` • Home: ${npc.home}` : ""}</p>
     `;
     card.onclick = () => showNPCDetail(npc);
@@ -1012,6 +892,15 @@ testJsonLoad();
 
     let physical = "";
     if (npc.age >= 18) {
+      let nippleText = "";
+      if (npc.nippleSize) {
+        if (npc.sex === "female" && npc.nippleShape) {
+          nippleText = `<p><strong>Nipples:</strong> ${npc.nippleSize}, ${npc.nippleShape}</p>`;
+        } else {
+          nippleText = `<p><strong>Nipples:</strong> ${npc.nippleSize}</p>`;
+        }
+      }
+
       if (npc.sex === "female") {
         physical = `
           <div class="clothing-section">
@@ -1019,12 +908,14 @@ testJsonLoad();
             <p><strong>Hips:</strong> ${npc.hips}</p>
             <p><strong>Butt:</strong> ${npc.butt}</p>
             <p><strong>Breasts:</strong> ${npc.breastSize}, ${npc.breastShape}</p>
+            ${nippleText}
           </div>`;
       } else {
         physical = `
           <div class="clothing-section">
             <h3>Male Physical Details</h3>
             <p><strong>Penis size:</strong> ${npc.penisSize}</p>
+            ${nippleText}
           </div>`;
       }
     } else {
@@ -1033,14 +924,8 @@ testJsonLoad();
 
     let clothingHTML = `
       <div class="clothing-section">
-        <h3>Current Outfit (${npc.style})</h3>
-        ${outfit.hat !== "none" ? `<div class="clothing-item"><strong>Hat:</strong> ${outfit.hat}</div>` : ""}
-        <div class="clothing-item"><strong>Top:</strong> ${outfit.top}</div>
-        ${outfit.bra && npc.age >= 13 ? `<div class="clothing-item"><strong>Bra:</strong> ${outfit.bra}</div>` : ""}
-        <div class="clothing-item"><strong>Bottom:</strong> ${outfit.bottom}</div>
-        ${outfit.underwear && outfit.underwear !== "none" && outfit.underwear !== "diaper" ? `<div class="clothing-item"><strong>Underwear:</strong> ${outfit.underwear}</div>` : ""}
-        <div class="clothing-item"><strong>Shoes:</strong> ${outfit.shoes}</div>
-        ${outfit.accessories !== "none" ? `<div class="clothing-item"><strong>Accessories:</strong> ${outfit.accessories}</div>` : ""}
+        <h3>Current Outfit</h3>
+        <div class="clothing-item"><strong>Wearing:</strong> ${formatOutfitSummary(outfit)}</div>
       </div>`;
 
     let familyHTML = `<div class="family-section"><h3>Family Information</h3>
@@ -1091,7 +976,9 @@ testJsonLoad();
   // INIT
   // ───────────────────────────────────────────────
 
-  function init() {
+  async function init() {
+    await loadClothingData();
+
     state.npcs = generateTown();
 
     createTimeButtons();
