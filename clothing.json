@@ -39,12 +39,11 @@
     {"name": "khaki shorts", "sex": ["unisex"], "slot": "bottom", "styles": ["preppy", "casual"], "coverage": ["butt", "genitals", "crotch"], "malfunctionChance": 0.03, "ageGroups": ["kid","teen","adult"]},
     {"name": "skirt", "sex": ["female"], "slot": "bottom", "styles": ["preppy", "bohemian"], "coverage": ["butt", "crotch"], "malfunctionChance": 0.15, "ageGroups": ["teen","adult"]},
     {"name": "sweater", "sex": ["unisex"], "slot": "top", "styles": ["all"], "coverage": ["chest", "nipples"], "malfunctionChance": 0.01, "ageGroups": ["kid","teen","adult","senior"]},
-    {"name": "dress", "sex": ["female"], "slot": "top", "styles": ["all"], ... }  // or as bottom if you prefer
+    {"name": "dress", "sex": ["female"], "slot": "top", "styles": ["all"], "coverage": ["chest", "breasts", "butt"], "malfunctionChance": 0.05, "ageGroups": ["teen","adult"]},
     {"name": "boxers", "sex": ["male"], "slot": "underwear", "styles": ["all"], "coverage": ["genitals", "butt"], "malfunctionChance": 0.05, "ageGroups": ["teen","adult","senior"]},
     {"name": "panties", "sex": ["female"], "slot": "underwear", "styles": ["all"], "coverage": ["genitals", "butt"], "malfunctionChance": 0.05, "ageGroups": ["teen","adult","senior"]},
     {"name": "sneakers", "sex": ["unisex"], "slot": "shoes", "styles": ["casual", "jock"], "coverage": [], "malfunctionChance": 0, "ageGroups": ["kid","teen","adult"]},
     {"name": "penny loafers", "sex": ["unisex"], "slot": "shoes", "styles": ["preppy"], "coverage": [], "malfunctionChance": 0, "ageGroups": ["adult","senior"]},
-    // Add more items here anytime — just follow the pattern!
     {"name": "pajama pants", "sex": ["unisex"], "slot": "bottom", "styles": ["pajamas"], "coverage": ["butt", "legs"], "malfunctionChance": 0.02, "ageGroups": ["kid","teen","adult","senior"]},
     {"name": "pajama top", "sex": ["unisex"], "slot": "top", "styles": ["pajamas"], "coverage": ["chest", "nipples"], "malfunctionChance": 0.02, "ageGroups": ["kid","teen","adult","senior"]}
   ]
