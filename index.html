@@ -415,7 +415,7 @@
 
   async function loadClothingData() {
     try {
-      const res = await fetch('clothing.json');
+      const res = await fetch('./clothing.json');
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       CLOTHING_DATA = await res.json();
       console.log("Clothing data loaded successfully");
